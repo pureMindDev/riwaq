@@ -1,4 +1,7 @@
-# Digital Tahfidh
+# Riwaq
+**Your Qur’an Learning Journey**
+
+(Previously called Digital Tahfidh. Some internal names still use the old name on purpose: see "Internal names" below.)
 
 A free digital madrasa: learn to read Arabic, memorise a little each day, keep what you have memorised (Muraja'ah), and listen to recitation.
 For individual learners. No payments, ads or monetisation.
@@ -35,7 +38,7 @@ There are no click-through shortcuts: memorising a passage, completing a revisio
 
 ## Repository layout
 ```
-digital-tahfidh/
+riwaq/
   frontend/                 React + Vite (plain CSS). Static; deploy anywhere.
     src/ (pages, components, context, hooks, services/api.js, lib)
   backend/                  Node + Express + MongoDB (Mongoose). No src/ folder.
@@ -108,8 +111,13 @@ export MONGOD_BIN=$(which mongod)
 ./e2e/run-stack.sh dev && (cd e2e && python3 madrasa.py && python3 public.py); ./e2e/stop-stack.sh   # general flows (dev switch on, no engine)
 ```
 Without `TEST_MONGODB_URI`, the database tests are reported as SKIPPED (not passed); the rest still run.
-Status when this was last updated (2026-11-11): backend `npm run test:db` 94/94 passed on MongoDB 7.0.34. Frontend: 6 tests passed, build OK. The browser (`e2e/`) tests were **not** re-run after the Foundation/shell redesign (2026-11-12). The Foundation pages were checked in a real browser (Chromium, real backend and MongoDB) at 375, 390, 430, 768, 820, 1024, 1280 and 1536 px: no horizontal overflow on any route, no overlapping letter shapes, 20 scripted flow checks passed (zero state, failed and passed quiz, score/attempt consistency, completion, unlocking, sign-out/in). Real device testing and screen readers were not done.
+Status when this was last updated (2026-11-12): backend `npm run test:db` 100/100 passed on MongoDB 7.0.34. Frontend: 12 tests passed, build OK. The Python browser suite in `e2e/` was **not** re-run after the redesign. Separate scripted Chromium checks (real backend and MongoDB, no real Qur'an provider or recitation engine) covered the Foundation journey including page reloads (failed quiz, pass, complete, next lesson unlocks, attempts/score persist), keyboard use, WCAG AA contrast of key text, the Riwaq branding, and no horizontal overflow at 375, 390, 430, 768, 820 and 1280 px. Not tested: real phones, iOS/Safari, screen readers, letter pronunciation audio (no recordings are shipped), and recognition accuracy (no real engine connected).
+
+Arabic notes: the 28 letters follow the standard order; alif, dāl, dhāl, rā’, zāy and wāw never join the next letter, so they are shown with two shapes (alone, end) and the others with four. Hamza (ء), tā’ marbūṭa (ة) and alif maqṣūra (ى) are not taught as separate letters.
 The word-aligner exists in `backend/utils/recitation/` and `frontend/src/lib/recitation/`; a backend test fails if they differ.
+
+## Internal names (unchanged on purpose)
+The visible name is Riwaq. These internal identifiers keep the old name so existing installs do not lose data or sign users out: the browser-storage keys `dt:token` and `digital-tahfidh:prefs:v1`, the example database name `digital-tahfidh` (in `.env.example` and `e2e/`), the npm package name `digital-tahfidh-backend`, and the `DigitalTahfidh/0.1` User-Agent sent to the Qur'an provider. Renaming any of them is a separate, deliberate migration. "Tahfidh" is also the name of the memorisation feature and its page, and stays.
 
 ## Known limitations
 - **No real recognition engine has been connected or measured.** The Muallim's wording and rules are tested with a scriptable stub that returns exactly what the test says was "heard". Real accuracy (especially for vowels and letters) is unknown until a Qur'an-capable engine is connected and checked on real learner recordings.

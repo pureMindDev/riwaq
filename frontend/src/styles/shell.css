@@ -1,0 +1,201 @@
+/* App shell + Foundation page, in the "Madrah" look: white sidebar, mint cards, teal/blue title.
+   Loaded after global.css. Plain CSS (no Tailwind). Mobile first. */
+:root {
+  --emerald-900: #064e3b;
+  --emerald-700: #0a7d5c;
+  --emerald-100: #d9f5e8;
+  --cream: #f6faf8;
+  --mint-50: #effaf5;
+  --mint-border: #9fdcc1;
+  --blue-600: #2563eb;
+  --danger: #b42318;
+  --sidebar-w: 260px;
+  --topbar-h: 56px;
+}
+body { background: var(--cream); }
+.btn { border-radius: 10px; }
+.icon { flex: none; }
+
+.btn-outline { background: #fff; color: var(--emerald-700); border: 1px solid var(--mint-border); }
+.btn-outline:hover { background: var(--mint-50); }
+button.btn-outline { cursor: pointer; }
+
+.icon-btn { display: inline-grid; place-items: center; width: 44px; min-width: 44px; flex: none; height: 44px; border: 0; border-radius: 10px; background: transparent; color: var(--emerald-900); cursor: pointer; }
+.icon-btn:hover { background: var(--emerald-100); }
+
+/* ---------- Shell ---------- */
+.shell { min-height: 100vh; }
+.shell-main { min-width: 0; }
+.shell-main .container { max-width: 1100px; }
+
+.topbar {
+  position: sticky; top: 0; z-index: 20; height: var(--topbar-h);
+  display: flex; align-items: center; gap: 0.5rem; padding: 0 0.5rem;
+  background: #fff; border-bottom: 1px solid var(--line);
+}
+.topbar-brand { font-weight: 700; color: var(--emerald-900); text-decoration: none; font-size: 1.15rem; display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+
+.backdrop { position: fixed; inset: 0; z-index: 40; background: rgba(6, 40, 30, 0.45); }
+
+.sidebar {
+  position: fixed; z-index: 50; top: 0; bottom: 0; left: 0; width: min(84vw, var(--sidebar-w));
+  display: flex; flex-direction: column; background: #fff; border-right: 1px solid var(--line);
+  transform: translateX(-100%); transition: transform 0.2s ease; overflow-y: auto; overscroll-behavior: contain;
+}
+.sidebar.open { transform: none; box-shadow: 0 0 30px rgba(0, 0, 0, 0.18); }
+.sidebar-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.9rem 0.9rem 0.8rem; border-bottom: 1px solid var(--line); }
+.sidebar-brand { display: flex; align-items: center; gap: 0.7rem; text-decoration: none; color: var(--ink); min-width: 0; }
+.sidebar-brand span:last-child { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
+.sidebar-brand strong { color: var(--emerald-900); font-size: 1.1rem; }
+.sidebar-brand small { color: var(--ink-soft); font-size: 0.78rem; }
+.logo-mark { flex: none; width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: var(--emerald-900); color: #fff; font-weight: 700; font-size: 0.95rem; letter-spacing: 0.02em; }
+
+.side-nav { flex: 1; padding: 0.6rem 0.75rem; display: flex; flex-direction: column; gap: 0.15rem; }
+.side-label { margin: 0.9rem 0.5rem 0.25rem; font-size: 0.78rem; font-weight: 600; color: var(--ink-soft); }
+.side-link {
+  display: flex; align-items: center; gap: 0.7rem; min-height: 44px; padding: 0.4rem 0.7rem; border-radius: 10px;
+  color: var(--ink); text-decoration: none; font-weight: 600; font-size: 0.98rem;
+}
+.side-link:hover { background: var(--mint-50); }
+.side-link.active { background: var(--emerald-100); color: var(--emerald-900); }
+.sidebar-foot { padding: 0.75rem; border-top: 1px solid var(--line); }
+.side-user { margin: 0 0 0.5rem 0.25rem; overflow-wrap: anywhere; }
+.signout-btn {
+  width: 100%; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  background: #fff; color: var(--danger); border: 1px solid #f0b8b2; border-radius: 10px; font: inherit; font-weight: 600; cursor: pointer;
+}
+.signout-btn:hover { background: #fdf2f1; }
+
+/* Bottom bar (phones/tablets): five main pages within thumb reach */
+.nav-bottom { grid-template-columns: repeat(5, 1fr); z-index: 30; background: #fff; }
+.bottom-link { flex-direction: column; gap: 2px; font-size: 0.72rem; font-weight: 600; text-decoration: none; min-width: 0; }
+.bottom-link span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nav-bottom a.active { color: var(--emerald-700); box-shadow: inset 0 3px 0 var(--emerald-700); }
+.main { padding-top: 1rem; padding-bottom: calc(var(--bottom-nav-h) + 1.5rem + env(safe-area-inset-bottom)); }
+
+@media (min-width: 760px) and (max-width: 899px) {
+  .nav-bottom { display: grid; }
+  .main { padding-bottom: calc(var(--bottom-nav-h) + 1.5rem); }
+}
+
+/* Wide screens: permanent sidebar, no top bar or bottom bar */
+@media (min-width: 900px) {
+  .topbar, .backdrop, .sidebar-close, .nav-bottom { display: none; }
+  .sidebar { transform: none; width: var(--sidebar-w); transition: none; }
+  .shell-main { margin-left: var(--sidebar-w); }
+  .main { padding-top: 1.5rem; padding-bottom: 3rem; }
+}
+
+/* ---------- Page header (Foundation) ---------- */
+.hub-head { display: grid; grid-template-columns: auto 1fr; gap: 0.6rem 0.75rem; align-items: center; margin-bottom: 0.5rem; }
+.hub-title { display: flex; align-items: center; gap: 0.6rem; min-width: 0; grid-column: 1 / -1; grid-row: 2; }
+.hub-head .share { grid-column: 2; grid-row: 1; justify-self: end; text-align: right; }
+.hub-icon { flex: none; width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; color: #fff; background: linear-gradient(135deg, var(--emerald-700), var(--blue-600)); }
+.hub-title h1 { margin: 0; font-size: 1.45rem; color: var(--emerald-700); background: linear-gradient(90deg, var(--emerald-700), var(--blue-600)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+@media (min-width: 700px) {
+  .hub-head { grid-template-columns: auto 1fr auto; }
+  .hub-title { grid-column: 2; grid-row: 1; }
+  .hub-head .share { grid-column: 3; }
+  .hub-title h1 { font-size: 1.9rem; }
+}
+.share-btn { display: inline-flex; align-items: center; gap: 0.4rem; }
+.share .small-print { max-width: 18rem; margin-top: 0.3rem; }
+
+.lessons-summary { margin: 0.5rem 0 1.25rem; max-width: 32rem; }
+.lessons-count { margin: 0 0 0.3rem; color: var(--ink-soft); font-size: 0.95rem; }
+progress { appearance: none; -webkit-appearance: none; border: 0; border-radius: 999px; overflow: hidden; background: #dbe7e1; display: block; }
+progress::-webkit-progress-bar { background: #dbe7e1; }
+progress::-webkit-progress-value { background: var(--emerald-700); border-radius: 999px; }
+progress::-moz-progress-bar { background: var(--emerald-700); border-radius: 999px; }
+
+/* ---------- Letter cards ---------- */
+.letter-section { margin: 0 0 1.75rem; }
+.ls-head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; margin-bottom: 0.75rem; }
+.ls-head h2 { margin: 0; font-size: 1.15rem; flex: 1 1 14rem; }
+
+/* Phones: two columns when each card can be at least 9.5rem wide, otherwise one. Tablets: 2. Large screens: 3. */
+.letter-tiles, .lesson-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr)); }
+.lesson-grid { grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 640px) { .letter-tiles, .lesson-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; } }
+@media (min-width: 1100px) { .letter-tiles, .lesson-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.letter-tiles > li, .lesson-grid > li { min-width: 0; display: flex; }
+
+.letter-tile, .lesson-card {
+  width: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.1rem;
+  padding: 0.75rem 0.75rem 0.65rem; background: var(--mint-50); border: 1px solid var(--mint-border); border-radius: 12px;
+  color: var(--ink); text-decoration: none;
+}
+/* The whole card opens the lesson: the name's link is stretched over it; the play button sits above that link. */
+.letter-tile { position: relative; transition: box-shadow 0.15s; }
+.letter-tile:has(.ltr-link):hover { box-shadow: 0 4px 14px rgba(10, 125, 92, 0.18); }
+.ltr-link { color: inherit; text-decoration: none; }
+.ltr-link::after { content: ''; position: absolute; inset: 0; border-radius: 12px; }
+.ltr-link:focus-visible { outline: none; }
+.ltr-link:focus-visible::after { outline: 3px solid var(--gold-500); outline-offset: 2px; }
+.ltr-icons { display: flex; align-items: center; gap: 0.15rem; }
+.audio-btn { position: relative; z-index: 1; width: 44px; height: 44px; margin: -10px -6px -10px 0; display: grid; place-items: center; background: transparent; border: 0; border-radius: 50%; color: var(--emerald-700); cursor: pointer; }
+.audio-btn:hover { background: var(--emerald-100); }
+.audio-btn.is-playing { background: var(--emerald-700); color: #fff; }
+.letter-tile.is-locked, .lesson-card.is-locked { background: #f3f5f4; border: 1px dashed #c3ccc8; color: var(--ink-soft); }
+.ltr-top { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 0.4rem; min-height: 1.75rem; }
+.ltr-name { margin: 0; font-size: 1rem; text-align: left; overflow-wrap: anywhere; }
+.ltr-state { flex: none; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; }
+.ltr-complete { color: var(--emerald-700); border: 1.5px solid var(--emerald-700); }
+.ltr-locked { color: var(--ink-soft); }
+.letter-tile .arabic-big { font-size: 2.6rem; line-height: 1.5; color: var(--emerald-900); margin: 0.15rem 0; }
+.ltr-sound { margin: 0; font-style: italic; font-size: 0.95rem; }
+.ltr-note { margin: 0 0 0.4rem; font-size: 0.82rem; color: var(--ink-soft); }
+.ltr-foot { width: 100%; margin-top: auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 0.5rem; font-size: 0.8rem; color: var(--ink-soft); }
+
+/* ---------- Lesson cards (non-letter lessons, Tahfidh page) ---------- */
+.lesson-card { align-items: stretch; text-align: left; gap: 0.2rem; padding: 0.9rem; }
+.lc-top, .lc-foot { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; }
+.lc-num { font-size: 0.85rem; font-weight: 600; color: var(--ink-soft); }
+.lc-state { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.82rem; font-weight: 600; padding: 0.1rem 0.6rem; border-radius: 999px; background: #fff; border: 1px solid var(--mint-border); color: var(--emerald-900); }
+.lc-state-locked { color: var(--ink-soft); border-color: #c3ccc8; }
+.lc-preview { margin: 0.2rem 0 0; text-align: center; font-family: var(--font-quran); font-size: 1.9rem; line-height: 1.6; color: var(--emerald-900); }
+.lc-title { margin: 0; font-size: 1rem; }
+.lc-stat { margin: 0; font-size: 0.9rem; }
+.lc-foot { margin-top: auto; padding-top: 0.5rem; }
+
+/* ---------- Letter cards inside a lesson page ---------- */
+.lesson-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.9rem; margin: 0 0 1rem; }
+.letter-grid { display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr); margin-bottom: 1rem; }
+@media (min-width: 700px) { .letter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .letter-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.letter-card { background: var(--mint-50); border-color: var(--mint-border); padding: 1rem; }
+.lc-letter-top { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; min-height: 1.75rem; }
+.lc-letter-name { font-weight: 700; font-size: 1.1rem; }
+.letter-card .audio-btn { margin-right: -8px; }
+.letter-card > .arabic-big { font-size: 3.2rem; line-height: 1.7; padding-block: 0.1rem; }
+
+/* The four shapes: a cell each, glyph above label, roomy line height so marks never touch the label. Always 2 x 2. */
+.forms { list-style: none; margin: 0.5rem 0 0; padding: 0; width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; }
+.form-cell { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 0.15rem; padding: 0.4rem 0.25rem 0.5rem; background: #fff; border: 1px solid var(--mint-border); border-radius: 10px; min-width: 0; }
+.form-glyph { direction: rtl; unicode-bidi: isolate; font-family: var(--font-quran); font-size: 2.3rem; line-height: 2.1; min-height: 4.4rem; display: flex; align-items: center; justify-content: center; color: var(--emerald-900); }
+.form-label { font-size: 0.82rem; font-weight: 600; color: var(--ink-soft); line-height: 1.2; }
+.juz-check { display: flex; gap: 0.5rem; align-items: center; min-height: 44px; }
+
+/* Comfortable touch targets */
+.sidebar-brand { min-height: 44px; }
+.back-link { display: inline-flex; align-items: center; min-height: 44px; }
+
+/* Surah/verse pickers: never wider than their card (a native <select> otherwise sizes to its longest option). */
+.range-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.range-fields > *, .field { min-width: 0; }
+.field select, .field input[type='number'], .field input[type='search'], .field input[type='date'], .inline-field select { width: 100%; min-width: 0; max-width: 100%; }
+
+/* ---------- Quiz ---------- */
+fieldset.card.field { padding: 1rem; gap: 0.6rem; }
+fieldset.card.field > .arabic-big { align-self: center; min-width: 5.5rem; text-align: center; font-size: 3.4rem; line-height: 1.7; padding: 0 1rem; background: var(--mint-50); border: 1px solid var(--mint-border); border-radius: 12px; color: var(--emerald-900); }
+.choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; }
+@media (min-width: 700px) { .choices { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.choices .radio { min-height: 48px; padding: 0.35rem 0.75rem; background: #fff; border: 1px solid #c9d8d1; border-radius: 10px; cursor: pointer; overflow-wrap: anywhere; }
+.choices .radio:hover { border-color: var(--emerald-700); }
+.choices .radio:has(input:checked) { border-color: var(--emerald-700); background: var(--emerald-100); font-weight: 600; }
+.choices .radio:has(input:focus-visible) { outline: 3px solid var(--gold-500); outline-offset: 2px; }
+.q-wrong { border-color: var(--danger); box-shadow: 0 0 0 1px var(--danger); }
+.form-note { text-align: center; margin-top: 0.5rem; }
+.audio-btn.is-error { color: var(--danger); opacity: 0.75; cursor: not-allowed; }
+.audio-btn:disabled:hover { background: transparent; }
+.sidebar-brand small { white-space: normal; }

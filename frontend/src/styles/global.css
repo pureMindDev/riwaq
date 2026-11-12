@@ -1,0 +1,310 @@
+/* ---------- Design tokens ---------- */
+:root {
+  --emerald-900: #0b3d2e;
+  --emerald-700: #0f5b46;
+  --emerald-100: #e3efe9;
+  --gold-500: #b8923a;
+  --gold-100: #f4ead2;
+  --cream: #fbf8f1;
+  --surface: #ffffff;
+  --ink: #1d2a25;
+  --ink-soft: #4a5a53;
+  --line: #e2dccd;
+
+  --font-ui: 'Source Sans 3', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-quran: 'Amiri Quran', 'Traditional Arabic', 'Scheherazade New', serif;
+
+  --radius: 14px;
+  --space: 1rem;
+  --bottom-nav-h: 64px;
+}
+
+/* ---------- Base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 1.0625rem; /* 17px: comfortable on phones */
+  line-height: 1.6;
+}
+
+h1, h2 { line-height: 1.25; margin: 0 0 0.5rem; color: var(--emerald-900); }
+h1 { font-size: 1.9rem; }
+h2 { font-size: 1.2rem; }
+p { margin: 0 0 0.75rem; }
+a { color: var(--emerald-700); }
+
+:focus-visible {
+  outline: 3px solid var(--gold-500);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* For Qur'anic text (used from Stage 3). Always right-to-left. */
+.quran-text {
+  font-family: var(--font-quran);
+  direction: rtl;
+  text-align: right;
+  font-size: 1.9rem;
+  line-height: 2.2;
+}
+
+/* ---------- Layout ---------- */
+.container { width: 100%; max-width: 960px; margin: 0 auto; padding: 0 var(--space); }
+.main { padding-top: 1.5rem; padding-bottom: calc(var(--bottom-nav-h) + 2rem); }
+
+.skip-link {
+  position: absolute; left: -999px; top: 0;
+  background: var(--emerald-700); color: #fff; padding: 0.5rem 1rem; z-index: 100;
+}
+.skip-link:focus { left: 0; }
+
+/* ---------- Header ---------- */
+.site-header { background: var(--emerald-700); color: #fff; }
+.header-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 60px; }
+.brand { color: #fff; font-weight: 700; font-size: 1.2rem; text-decoration: none; }
+.settings-link { color: var(--gold-100); text-decoration: none; padding: 0.5rem; }
+.settings-link:hover { text-decoration: underline; }
+
+/* ---------- Navigation ---------- */
+.nav a { text-decoration: none; font-weight: 600; }
+
+.nav-top { display: none; gap: 0.25rem; }
+.nav-top a { color: #e8f2ed; padding: 0.5rem 0.9rem; border-radius: 999px; }
+.nav-top a:hover { background: rgba(255, 255, 255, 0.12); }
+.nav-top a.active { background: var(--gold-100); color: var(--emerald-900); }
+
+.nav-bottom {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  height: var(--bottom-nav-h);
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  background: var(--surface); border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.nav-bottom a {
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  font-size: 0.85rem; color: var(--ink-soft); padding: 0.25rem;
+}
+.nav-bottom a.active { color: var(--emerald-700); box-shadow: inset 0 3px 0 var(--gold-500); }
+
+@media (min-width: 760px) {
+  .nav-top { display: flex; }
+  .nav-bottom { display: none; }
+  .main { padding-bottom: 3rem; }
+}
+
+/* ---------- Content ---------- */
+.page-header { margin-bottom: 1.25rem; }
+.lead { color: var(--ink-soft); max-width: 60ch; }
+
+.grid { display: grid; gap: var(--space); }
+@media (min-width: 760px) { .grid { grid-template-columns: 1fr 1fr; } }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  margin-bottom: var(--space);
+}
+.grid .card { margin-bottom: 0; }
+
+.empty p { color: var(--ink-soft); }
+
+.status-note {
+  background: var(--gold-100);
+  border-left: 4px solid var(--gold-500);
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  margin-bottom: var(--space);
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-block;
+  min-height: 44px; /* easy to tap */
+  padding: 0.6rem 1.1rem;
+  border-radius: 999px;
+  font-weight: 600; text-decoration: none;
+}
+.btn-secondary { background: var(--emerald-100); color: var(--emerald-900); }
+.btn-secondary:hover { background: #d3e6dd; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+/* ---------- Utilities ---------- */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.muted { color: var(--ink-soft); }
+.stack > * + * { margin-top: 1rem; }
+.plain-list { list-style: none; margin: 0 0 1rem; padding: 0; }
+.plain-list > li + li { margin-top: 0.6rem; }
+.plain-list.small { font-size: 0.95rem; }
+h3 { font-size: 1.05rem; margin: 0; color: var(--emerald-900); }
+
+/* ---------- Forms ---------- */
+.field { display: flex; flex-direction: column; gap: 0.3rem; border: 0; padding: 0; margin: 0; }
+.field label, .field legend { font-weight: 600; }
+input[type='number'], input[type='search'], input[type='date'], select {
+  min-height: 44px; padding: 0.5rem 0.75rem; font: inherit; color: var(--ink);
+  background: #fff; border: 1px solid #b9b19c; border-radius: 10px; max-width: 100%;
+}
+.range-fields { display: grid; gap: 0.75rem; grid-template-columns: 1fr 1fr; }
+.range-fields .field:first-child { grid-column: 1 / -1; }
+.field-hint { grid-column: 1 / -1; margin: 0; font-size: 0.95rem; }
+.radio, .check { display: flex; gap: 0.5rem; align-items: center; min-height: 44px; font-weight: 400; }
+.radio input, .check input { width: 22px; height: 22px; accent-color: var(--emerald-700); flex: none; }
+.inline-field { margin-bottom: 0.75rem; max-width: 16rem; }
+.form-error { color: #8a1c1c; font-weight: 600; margin: 0; min-height: 1.2em; }
+.form-ok { color: var(--emerald-700); font-weight: 600; margin: 0; min-height: 1.2em; }
+
+/* ---------- Buttons ---------- */
+button.btn { border: 0; font: inherit; font-weight: 600; cursor: pointer; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-primary { background: var(--emerald-700); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: var(--emerald-900); }
+.btn-link { background: none; color: var(--emerald-700); text-decoration: underline; padding-left: 0.4rem; padding-right: 0.4rem; }
+.actions { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-top: 0.5rem; }
+.page-actions { margin: 1.25rem 0; }
+
+/* ---------- Chips (always have text, never colour alone) ---------- */
+.chips { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.25rem; }
+.chip { display: inline-block; padding: 0.1rem 0.6rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600; border: 1px solid transparent; }
+.chip-learning { background: var(--gold-100); color: #5c4510; border-color: var(--gold-500); }
+.chip-memorised, .chip-easy { background: var(--emerald-100); color: var(--emerald-900); border-color: #a9cbbd; }
+.chip-needs, .chip-difficult { background: #fbe4e1; color: #7a1f17; border-color: #e3a49d; }
+.chip-moderate { background: var(--gold-100); color: #5c4510; border-color: var(--gold-500); }
+.chip-overdue { background: #7a1f17; color: #fff; }
+.chip-due { background: var(--emerald-700); color: #fff; }
+.chip-stale { background: #eee9dc; color: var(--ink); border-color: var(--line); }
+
+/* ---------- Lists and cards ---------- */
+.passage-head { display: flex; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap; align-items: flex-start; }
+.task { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; padding: 0.6rem 0; border-bottom: 1px solid var(--line); }
+.task:last-child { border-bottom: 0; }
+.error-box { background: #fbe4e1; border-left: 4px solid #a8332a; border-radius: 8px; padding: 0.9rem 1rem; margin: 0.75rem 0; }
+.error-box p { margin-bottom: 0.5rem; }
+.storage-warning { background: #fbe4e1; color: #5a1710; padding: 0.6rem 0; font-weight: 600; }
+.onboarding ol { padding-left: 1.2rem; }
+.attribution { font-size: 0.9rem; color: var(--ink-soft); margin-top: 1rem; }
+
+/* ---------- Surah list ---------- */
+.surah-list { list-style: none; margin: 1rem 0; padding: 0; display: grid; gap: 0.5rem; }
+.surah-link {
+  display: flex; align-items: center; gap: 0.9rem; min-height: 56px; padding: 0.5rem 0.9rem;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); text-decoration: none; color: var(--ink);
+}
+.surah-link:hover { border-color: var(--gold-500); }
+.surah-num { flex: none; width: 2.2rem; height: 2.2rem; display: grid; place-items: center; border-radius: 50%; background: var(--emerald-100); color: var(--emerald-900); font-weight: 700; }
+.surah-names { display: flex; flex-direction: column; flex: 1; line-height: 1.3; }
+.surah-arabic { font-family: var(--font-quran); font-size: 1.4rem; }
+
+/* ---------- Verses ---------- */
+.verse-list { list-style: none; margin: 1rem 0; padding: 0; display: grid; gap: 0.5rem; }
+.verse {
+  display: flex; flex-direction: row-reverse; align-items: flex-start; justify-content: space-between; gap: 0.75rem;
+  width: 100%; text-align: right; font: inherit; color: inherit; cursor: pointer;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 0.4rem 1rem;
+}
+.verse:hover { border-color: var(--gold-500); }
+.verse-active { border-color: var(--emerald-700); box-shadow: inset 4px 0 0 var(--gold-500), 0 0 0 1px var(--emerald-700); background: #f6faf8; }
+.verse-number { flex: none; margin-top: 0.7rem; min-width: 2rem; text-align: center; font-size: 0.85rem; font-weight: 700; color: var(--emerald-900); background: var(--gold-100); border-radius: 999px; padding: 0.1rem 0.4rem; }
+.verse .quran-text { margin: 0; flex: 1; }
+.verse .muted { margin: 0.8rem 0; flex: 1; text-align: left; }
+
+/* ---------- Player ---------- */
+.player-bar { position: sticky; bottom: var(--bottom-nav-h); z-index: 5; margin-top: 1rem; }
+@media (min-width: 760px) { .player-bar { bottom: 0.5rem; } }
+.player { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 0.8rem 1rem; box-shadow: 0 -2px 10px rgba(11, 61, 46, 0.1); }
+.player-status { margin: 0 0 0.5rem; font-size: 0.95rem; color: var(--ink-soft); min-height: 1.4em; }
+.player-buttons { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+@media (min-width: 560px) { .player-buttons { grid-template-columns: repeat(4, auto); justify-content: start; } }
+.player-buttons .btn { text-align: center; }
+.player-options { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; align-items: center; margin-top: 0.5rem; }
+.player-options label { font-size: 0.95rem; }
+.player-options .check { min-height: 40px; }
+
+/* ---------- Recitation result ---------- */
+.analysis { line-height: 2.4; }
+.word { padding: 0 0.25rem; border-radius: 6px; }
+.word-correct { background: var(--emerald-100); }
+.word-uncertain { background: var(--gold-100); border-bottom: 2px dotted var(--gold-500); }
+.word-omitted { background: #fbe4e1; text-decoration: underline wavy #a8332a; }
+.word-substituted { background: #fbe4e1; border-bottom: 2px solid #a8332a; }
+.word-not_reached { background: #eee9dc; color: var(--ink-soft); }
+.legend { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.3rem; font-size: 0.95rem; }
+.legend .word { font-family: var(--font-ui); }
+
+/* ---------- Player (compact) ---------- */
+.player-buttons { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; gap: 0.4rem; }
+.player-buttons .btn { padding: 0.5rem 0.25rem; min-height: 44px; }
+.player { padding: 0.5rem 0.75rem; }
+.player-status { font-size: 0.85rem; margin-bottom: 0.35rem !important; }
+.player-more { margin-top: 0.25rem; }
+.player-more summary { cursor: pointer; font-size: 0.95rem; min-height: 36px; display: flex; align-items: center; color: var(--emerald-700); font-weight: 600; }
+.player-more .player-options { padding-bottom: 0.25rem; }
+
+/* ---------- Viewer / recitation ---------- */
+.viewer-tools { display: grid; gap: 0.5rem; }
+.viewer-tools .field { max-width: 24rem; }
+.small-print { font-size: 0.9rem; margin: 0; }
+.inline-ar { font-family: var(--font-quran); font-size: 1.25rem; }
+.inline-number { display: inline-block; margin: 0 0.4rem; }
+.reference .quran-text { margin: 0 0 0.4rem; }
+.word-followed { background: var(--emerald-100); }
+.field input[type='file'] { font: inherit; }
+
+/* ---------- Dashboard / coverage / steps ---------- */
+.next-action { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; border-left: 4px solid var(--gold-500); }
+.next-action h2 { margin: 0; }
+.next-action p { margin: 0.15rem 0 0; }
+.overdue-badge { margin-left: 0.5rem; vertical-align: middle; font-size: 0.8rem; }
+.week { list-style: none; display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; padding: 0; margin: 0 0 0.75rem; text-align: center; }
+.week li { background: var(--cream); border: 1px solid var(--line); border-radius: 8px; padding: 0.25rem 0; display: flex; flex-direction: column; font-size: 0.8rem; }
+.week strong { font-size: 1.1rem; color: var(--emerald-900); }
+.cover-row { display: flex; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; }
+progress { width: 100%; height: 0.7rem; accent-color: var(--emerald-700); }
+.steps { padding-left: 2.2rem; }
+.steps li { margin-bottom: 0.25rem; }
+
+/* ---------- Madrasa: foundation lessons, accounts, milestones ---------- */
+.narrow { max-width: 28rem; }
+.header-account { display: flex; align-items: center; }
+.arabic { font-family: var(--font-quran); font-size: 1.3rem; }
+.arabic-big { font-family: var(--font-quran); font-size: 2.2rem; line-height: 1.6; }
+.letter-card { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; margin: 0; }
+.syllables { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr)); gap: 0.5rem; padding: 0; margin: 0; }
+.syllables li { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; text-align: center; padding: 0.4rem; display: flex; flex-direction: column; }
+.drill-row { font-family: var(--font-quran); font-size: 2rem; line-height: 2; display: flex; flex-wrap: wrap; gap: 1.2rem; justify-content: center; margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 0.25rem 1rem; }
+.lesson-list { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: 0.5rem; }
+.lesson-list li { display: flex; align-items: center; gap: 0.9rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 0.5rem 0.9rem; min-height: 56px; }
+.lesson-list li.locked { opacity: 0.65; }
+.choices { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; }
+.q-wrong { border-color: #a8332a; }
+.lesson-footer { margin-top: 1.5rem; }
+.juz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(7rem, 1fr)); gap: 0 0.5rem; }
+.task-done strong { color: var(--ink-soft); }
+
+/* Questions inside cards: keep the legend INSIDE the card, and keep answer options in normal weight. */
+fieldset.card { min-inline-size: 0; }
+fieldset.card > legend { float: left; width: 100%; padding: 0; margin-bottom: 0.5rem; font-weight: 600; }
+fieldset.card > legend + * { clear: both; }
+.field label.radio, .field label.check, label.radio, label.check { font-weight: 400; }
+.stack > fieldset.card + fieldset.card, .stack > fieldset.card + * { margin-top: 1rem; }
+
+/* ---------- The Muallim ---------- */
+.muallim { border-radius: var(--radius); padding: 1rem 1.1rem; border: 1px solid var(--line); background: var(--surface); }
+.muallim h3 { margin-bottom: 0.25rem; }
+.muallim-passed { border-color: var(--emerald-700); background: #f1f8f5; }
+.muallim-try_again { border-color: #a8332a; background: #fdf6f5; }
+.muallim-unclear { border-color: var(--gold-500); background: var(--gold-100); }
+.corrections { padding-left: 1.4rem; margin: 0.5rem 0; }
+.corrections li { margin-bottom: 0.6rem; font-size: 1.05rem; }
+.correction-word { display: inline-block; background: #fbe4e1; color: #7a1f17; border-radius: 999px; padding: 0 0.5rem; font-size: 0.8rem; font-weight: 700; margin-right: 0.25rem; }

@@ -1,0 +1,21 @@
+{
+  "name": "digital-tahfidh-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.9"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.js",
+    "dev": "node --watch --env-file-if-exists=.env server.js",
+    "mock-provider": "node dev/mock-provider.js",
+    "test": "node --test \"test/**/*.test.js\"",
+    "test:db": "sh scripts/with-test-db.sh npm test"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.3.0",
+    "mongoose": "^9.11.4"
+  }
+}
