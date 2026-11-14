@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "test": "node --test \"src/**/*.test.js\""
+    "test": "node --test \"src/**/*.test.js\"",
+    "check:audio": "node scripts/check-letter-audio.mjs"
   },
   "dependencies": {
     "react": "^19.3.1",

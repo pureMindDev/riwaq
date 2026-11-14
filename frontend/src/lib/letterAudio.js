@@ -1,6 +1,7 @@
 // Letter pronunciation audio. No recordings ship with the app, and a speech synthesiser is NOT used: it cannot be
 // trusted to pronounce Qur'anic letters correctly. Recordings by a qualified reader are listed in
-// public/audio/letters/manifest.json as { "ba": "ba.mp3", ... } (letter id -> file in the same folder).
+// public/audio/letters/manifest.json (letter id -> file in the same folder), either "ba": "ba.mp3" or
+// "ba": { "file": "ba.mp3", "reader": "...", "verifiedBy": "..." } (run `npm run check:audio` to validate it).
 // A letter gets a play button only if it is listed, so no button is ever decorative.
 const BASE = '/audio/letters/'
 let manifest
@@ -13,7 +14,11 @@ export function loadLetterAudio() {
   return manifest
 }
 
-export const letterAudioUrl = (files, id) => (typeof files?.[id] === 'string' && /^[\w.-]+$/.test(files[id]) ? BASE + files[id] : null)
+export const entryFile = (entry) => (typeof entry === 'string' ? entry : entry && typeof entry === 'object' ? entry.file : undefined)
+export const letterAudioUrl = (files, id) => {
+  const file = entryFile(files?.[id])
+  return typeof file === 'string' && /^[\w.-]+$/.test(file) ? BASE + file : null
+}
 
 import { createLetterPlayer } from './letterPlayer.js'
 export const letterPlayer = createLetterPlayer()

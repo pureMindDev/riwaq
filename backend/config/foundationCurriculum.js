@@ -63,6 +63,41 @@ export const ARTICULATION_AREAS = [
   { name: 'Al-Khayshūm (the nasal passage)', letters: 'ن م', note: 'the nasal sound (ghunna) of ن and م' },
 ]
 
+// Where each letter is made (makhraj), as a short plain-language summary of the standard Tajweed makharij.
+// `area` must be one of the ARTICULATION_AREAS names above (tested). This is a textbook summary, NOT a substitute for
+// learning the sound from a qualified teacher, and it is not Tajweed-certified by this project.
+const JAWF = ARTICULATION_AREAS[0].name, HALQ = ARTICULATION_AREAS[1].name, LISAN = ARTICULATION_AREAS[2].name, LIPS = ARTICULATION_AREAS[3].name
+export const MAKHRAJ = {
+  alif: { area: JAWF, place: 'The open space of the mouth: the mouth stays open and the sound flows out as a long “ā”. (Hamza ء, often confused with alif, is made at the deepest part of the throat.)' },
+  ba: { area: LIPS, place: 'The two lips meet and then release.' },
+  ta: { area: LISAN, place: 'The tip of the tongue touches the base of the upper front teeth (the same place as د and ط).' },
+  tha: { area: LISAN, place: 'The tip of the tongue touches the edges of the upper front teeth (the same place as ذ and ظ).' },
+  jim: { area: LISAN, place: 'The middle of the tongue rises to the roof of the mouth (the same place as ش and the consonant ي).' },
+  hha: { area: HALQ, place: 'The middle of the throat. A clear, light breathy sound: not the same as ه.' },
+  kha: { area: HALQ, place: 'The top of the throat, nearest the mouth. A rough, scraping sound, said with a full (heavy) mouth.' },
+  dal: { area: LISAN, place: 'The tip of the tongue touches the base of the upper front teeth (the same place as ت and ط).' },
+  dhal: { area: LISAN, place: 'The tip of the tongue touches the edges of the upper front teeth (the same place as ث and ظ).' },
+  ra: { area: LISAN, place: 'The tip of the tongue, a little further back than for ن, with a light tap.' },
+  zay: { area: LISAN, place: 'The tip of the tongue near the lower front teeth, giving a whistling sound (the same place as س and ص).' },
+  sin: { area: LISAN, place: 'The tip of the tongue near the lower front teeth, giving a whistling sound (the same place as ز and ص).' },
+  shin: { area: LISAN, place: 'The middle of the tongue rises to the roof of the mouth (the same place as ج and the consonant ي).' },
+  sad: { area: LISAN, place: 'The tip of the tongue near the lower front teeth, said with a full (heavy) mouth. It is the heavy partner of س.' },
+  dad: { area: LISAN, place: 'The side (edge) of the tongue presses against the upper back teeth (molars). A heavy sound, different from د.' },
+  tta: { area: LISAN, place: 'The tip of the tongue touches the base of the upper front teeth, said with a full (heavy) mouth. It is the heavy partner of ت.' },
+  zha: { area: LISAN, place: 'The tip of the tongue touches the edges of the upper front teeth, said with a full (heavy) mouth. It is the heavy partner of ذ.' },
+  ayn: { area: HALQ, place: 'The middle of the throat (with ح). A squeezed, voiced sound from the throat.' },
+  ghayn: { area: HALQ, place: 'The top of the throat, nearest the mouth (with خ). A gargling sound, said with a full (heavy) mouth.' },
+  fa: { area: LIPS, place: 'The inside of the lower lip touches the edges of the upper front teeth.' },
+  qaf: { area: LISAN, place: 'The very back of the tongue rises to the soft palate. A deep, heavy sound, further back than ك.' },
+  kaf: { area: LISAN, place: 'The back of the tongue, slightly in front of where ق is made, touches the roof of the mouth. A light sound.' },
+  lam: { area: LISAN, place: 'The side of the tongue near its tip touches the gum above the upper front teeth.' },
+  mim: { area: LIPS, place: 'The two lips close, and the nasal sound (ghunna) comes through the nose.' },
+  nun: { area: LISAN, place: 'The tip of the tongue touches the gum above the upper front teeth, and the nasal sound (ghunna) comes through the nose.' },
+  ha: { area: HALQ, place: 'The deepest part of the throat. A light breath, not a hard scrape.' },
+  waw: { area: LIPS, place: 'The two lips round together without fully closing. As the long vowel “ū” it comes from the open space of the mouth (Al-Jawf).' },
+  ya: { area: LISAN, place: 'The middle of the tongue rises towards the roof of the mouth. As the long vowel “ī” it comes from the open space of the mouth (Al-Jawf).' },
+}
+
 const slice = (a, b) => LETTERS.slice(a, b).map((l) => l.id)
 
 // type: 'letters' (study + name quiz) | 'vowels' | 'marks' | 'madd' | 'joining' | 'info' | 'drill' | 'readalong'

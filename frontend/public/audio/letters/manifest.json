@@ -1,1 +1,282 @@
-{}
+{
+  "alif": {
+    "file": "alif.m4a",
+    "kind": "letter name",
+    "reader": "AlNatiq",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%A7.wav",
+    "originalFile": "LL-Q13955 (ara)-AlNatiq-ا.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "ba": {
+    "file": "ba.m4a",
+    "kind": "letter name",
+    "reader": "Zinou2go",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-Zinou2go-%D8%A8.wav",
+    "originalFile": "LL-Q13955 (ara)-Zinou2go-ب.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "ta": {
+    "file": "ta.m4a",
+    "kind": "letter name",
+    "reader": "AlNatiq",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%AA.wav",
+    "originalFile": "LL-Q13955 (ara)-AlNatiq-ت.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "tha": {
+    "file": "tha.m4a",
+    "kind": "letter name",
+    "reader": "AlNatiq",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%AB.wav",
+    "originalFile": "LL-Q13955 (ara)-AlNatiq-ث.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "jim": {
+    "file": "jim.m4a",
+    "kind": "letter name",
+    "reader": "AlNatiq",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%AC.wav",
+    "originalFile": "LL-Q13955 (ara)-AlNatiq-ج.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "hha": {
+    "file": "hha.m4a",
+    "kind": "letter name",
+    "reader": "AlNatiq",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%AD.wav",
+    "originalFile": "LL-Q13955 (ara)-AlNatiq-ح.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "kha": {
+    "file": "kha.m4a",
+    "kind": "letter name",
+    "reader": "AlNatiq",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%AE.wav",
+    "originalFile": "LL-Q13955 (ara)-AlNatiq-خ.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "dal": {
+    "file": "dal.m4a",
+    "kind": "letter name",
+    "reader": "Zinou2go",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-Zinou2go-%D8%AF.wav",
+    "originalFile": "LL-Q13955 (ara)-Zinou2go-د.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "dhal": {
+    "file": "dhal.m4a",
+    "kind": "letter name",
+    "reader": "AlNatiq",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%B0.wav",
+    "originalFile": "LL-Q13955 (ara)-AlNatiq-ذ.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "ra": {
+    "file": "ra.m4a",
+    "kind": "letter name",
+    "reader": "AlNatiq",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%B1.wav",
+    "originalFile": "LL-Q13955 (ara)-AlNatiq-ر.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "zay": {
+    "file": "zay.m4a",
+    "kind": "letter name",
+    "reader": "Rashed Aljahdali",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-Rashed_Aljahdali-%D8%B2.wav",
+    "originalFile": "LL-Q13955 (ara)-Rashed Aljahdali-ز.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "sin": {
+    "file": "sin.m4a",
+    "kind": "letter name",
+    "reader": "AlNatiq",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%B3.wav",
+    "originalFile": "LL-Q13955 (ara)-AlNatiq-س.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "shin": {
+    "file": "shin.m4a",
+    "kind": "letter name",
+    "reader": "AlNatiq",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%B4.wav",
+    "originalFile": "LL-Q13955 (ara)-AlNatiq-ش.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "sad": {
+    "file": "sad.m4a",
+    "kind": "letter name",
+    "reader": "AlNatiq",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%B5.wav",
+    "originalFile": "LL-Q13955 (ara)-AlNatiq-ص.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "dad": {
+    "file": "dad.m4a",
+    "kind": "letter name",
+    "reader": "AlNatiq",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%B6.wav",
+    "originalFile": "LL-Q13955 (ara)-AlNatiq-ض.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "tta": {
+    "file": "tta.m4a",
+    "kind": "letter name",
+    "reader": "AlNatiq",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%B7.wav",
+    "originalFile": "LL-Q13955 (ara)-AlNatiq-ط.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "zha": {
+    "file": "zha.m4a",
+    "kind": "letter name",
+    "reader": "Rashed Aljahdali",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-Rashed_Aljahdali-%D8%B8.wav",
+    "originalFile": "LL-Q13955 (ara)-Rashed Aljahdali-ظ.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "ayn": {
+    "file": "ayn.m4a",
+    "kind": "letter name",
+    "reader": "AlNatiq",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%B9.wav",
+    "originalFile": "LL-Q13955 (ara)-AlNatiq-ع.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "ghayn": {
+    "file": "ghayn.m4a",
+    "kind": "letter name",
+    "reader": "AlNatiq",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%BA.wav",
+    "originalFile": "LL-Q13955 (ara)-AlNatiq-غ.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "fa": {
+    "file": "fa.m4a",
+    "kind": "letter name",
+    "reader": "AlNatiq",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D9%81.wav",
+    "originalFile": "LL-Q13955 (ara)-AlNatiq-ف.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "qaf": {
+    "file": "qaf.m4a",
+    "kind": "letter name",
+    "reader": "AlNatiq",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D9%82.wav",
+    "originalFile": "LL-Q13955 (ara)-AlNatiq-ق.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "kaf": {
+    "file": "kaf.m4a",
+    "kind": "letter name",
+    "reader": "AlNatiq",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D9%83.wav",
+    "originalFile": "LL-Q13955 (ara)-AlNatiq-ك.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "lam": {
+    "file": "lam.m4a",
+    "kind": "letter name",
+    "reader": "AlNatiq",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D9%84.wav",
+    "originalFile": "LL-Q13955 (ara)-AlNatiq-ل.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "mim": {
+    "file": "mim.m4a",
+    "kind": "letter name",
+    "reader": "AlNatiq",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D9%85.wav",
+    "originalFile": "LL-Q13955 (ara)-AlNatiq-م.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "nun": {
+    "file": "nun.m4a",
+    "kind": "letter name",
+    "reader": "AlNatiq",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D9%86.wav",
+    "originalFile": "LL-Q13955 (ara)-AlNatiq-ن.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "ha": {
+    "file": "ha.m4a",
+    "kind": "letter name",
+    "reader": "AlNatiq",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D9%87.wav",
+    "originalFile": "LL-Q13955 (ara)-AlNatiq-ه.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "waw": {
+    "file": "waw.m4a",
+    "kind": "letter name",
+    "reader": "Zinou2go",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC BY-SA 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-Zinou2go-%D9%88.wav",
+    "originalFile": "LL-Q13955 (ara)-Zinou2go-و.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  },
+  "ya": {
+    "file": "ya.m4a",
+    "kind": "letter name",
+    "reader": "AlNatiq",
+    "readerType": "native Arabic speaker (Lingua Libre contributor)",
+    "licence": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D9%8A.wav",
+    "originalFile": "LL-Q13955 (ara)-AlNatiq-ي.wav",
+    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+  }
+}

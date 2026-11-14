@@ -199,3 +199,32 @@ fieldset.card.field > .arabic-big { align-self: center; min-width: 5.5rem; text-
 .audio-btn.is-error { color: var(--danger); opacity: 0.75; cursor: not-allowed; }
 .audio-btn:disabled:hover { background: transparent; }
 .sidebar-brand small { white-space: normal; }
+
+/* Tapping the big letter replays its recording (only rendered when a recording exists). */
+.glyph-btn { background: transparent; border: 0; padding: 0.4rem 1.25rem 0.9rem; line-height: 1.7; min-height: 44px; min-width: 44px; border-radius: 14px; color: inherit; cursor: pointer; font: inherit; }
+.glyph-btn:hover { background: var(--emerald-100); }
+.glyph-btn.is-playing { background: var(--emerald-100); outline: 2px solid var(--emerald-700); }
+.audio-credit { margin-top: 1rem; } .audio-credit a { color: var(--emerald-700); text-decoration: underline; }
+
+/* Makhraj note and record-yourself controls on lesson letter cards. */
+.makhraj { width: 100%; text-align: left; margin: 0.25rem 0 0.5rem; }
+.makhraj summary { cursor: pointer; font-weight: 600; color: var(--emerald-700); min-height: 44px; display: flex; align-items: center; }
+.makhraj p { margin: 0.25rem 0; }
+.practice { width: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+.practice-btn { display: inline-flex; align-items: center; gap: 0.4rem; min-height: 44px; }
+.practice-btn.is-recording { border-color: var(--danger); color: var(--danger); }
+.practice-btn.is-playing { background: var(--emerald-700); color: #fff; }
+.practice .link-btn { background: none; border: 0; color: var(--emerald-700); text-decoration: underline; min-height: 44px; padding: 0 0.5rem; cursor: pointer; font: inherit; }
+.practice-note { flex-basis: 100%; margin: 0; text-align: left; }
+
+/* Letter check result: colour AND icon AND words, never colour alone. */
+.practice-target { flex-basis: 100%; margin: 0; display: flex; align-items: center; gap: 0.5rem; justify-content: center; }
+.practice-say { font-weight: 600; }
+.ar-target { font-size: 2rem; line-height: 1.6; }
+.practice-btn .beta { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; border: 1px solid currentColor; border-radius: 999px; padding: 0 0.4rem; }
+.btn-primary.is-listening { background: var(--danger); }
+.check-result { flex-basis: 100%; }
+.verdict { margin: 0; padding: 0.6rem 0.75rem; border-radius: 10px; display: flex; align-items: center; gap: 0.5rem; font-weight: 600; text-align: left; }
+.verdict-ok { background: #d9f5e8; color: #064e3b; border: 1px solid #0a7d5c; }
+.verdict-bad { background: #fde8e6; color: #8a1c12; border: 1px solid #b42318; }
+.verdict .icon { flex: none; }

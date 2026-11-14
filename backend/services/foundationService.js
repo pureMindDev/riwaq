@@ -1,4 +1,4 @@
-import { LESSONS, LETTERS, SHORT_VOWELS, OTHER_MARKS, LONG_VOWELS, ARTICULATION_AREAS, QUIZ_PASS_RATIO } from '../config/foundationCurriculum.js'
+import { LESSONS, LETTERS, SHORT_VOWELS, OTHER_MARKS, LONG_VOWELS, ARTICULATION_AREAS, MAKHRAJ, QUIZ_PASS_RATIO } from '../config/foundationCurriculum.js'
 import { AppError } from '../utils/AppError.js'
 import { Student } from '../models/Student.js'
 import { StudyLog } from '../models/StudyLog.js'
@@ -107,7 +107,7 @@ function preview(lesson) {
 function content(lesson) {
   switch (lesson.type) {
     case 'letters':
-      return { letters: lesson.letterIds.map((id) => { const l = byId.get(id); return { id, char: l.char, name: l.name, joins: l.joins, forms: forms(l) } }) }
+      return { letters: lesson.letterIds.map((id) => { const l = byId.get(id); return { id, char: l.char, name: l.name, joins: l.joins, forms: forms(l), makhraj: MAKHRAJ[id] } }) }
     case 'vowels':
       return {
         marks: SHORT_VOWELS.map((v) => ({ name: v.name, mark: '◌' + v.mark, sound: v.vowel })),

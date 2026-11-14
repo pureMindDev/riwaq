@@ -53,3 +53,17 @@ test('every letters quiz has the right answer among its choices and no duplicate
     }
   }
 })
+
+test('every letter has a makhraj in a known articulation area, consistent with the area table', async () => {
+  const { MAKHRAJ, ARTICULATION_AREAS, LETTERS } = await import('../config/foundationCurriculum.js')
+  assert.deepEqual(Object.keys(MAKHRAJ), LETTERS.map((l) => l.id))
+  for (const l of LETTERS) {
+    const m = MAKHRAJ[l.id]
+    const area = ARTICULATION_AREAS.find((a) => a.name === m.area)
+    assert.ok(area, `${l.id}: unknown area`)
+    assert.ok(area.letters.split(' ').includes(l.char), `${l.id}: ${l.char} is not listed in "${area.name}"`)
+    assert.ok(m.place.length > 20)
+  }
+  // Throat letters: the three sub-places agree with the area table's note (deepest ء ه, middle ع ح, nearest the mouth غ خ).
+  assert.ok(MAKHRAJ.ha.place.includes('deepest') && MAKHRAJ.ayn.place.includes('middle') && MAKHRAJ.hha.place.includes('middle') && MAKHRAJ.kha.place.includes('top') && MAKHRAJ.ghayn.place.includes('top'))
+})

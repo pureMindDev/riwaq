@@ -9,7 +9,8 @@ import { useAuth } from '../context/Auth.jsx'
 import { useAsync } from '../hooks/useAsync.js'
 import { api } from '../services/api.js'
 import { Icon } from '../components/Icons.jsx'
-import LetterAudioButton from '../components/LetterAudioButton.jsx'
+import LetterAudioButton, { LetterGlyph, AudioCredit } from '../components/LetterAudioButton.jsx'
+import LetterPractice, { Makhraj } from '../components/LetterPractice.jsx'
 import { attemptsLabel, bestScore, scoreLabel } from '../lib/lessonStats.js'
 import { showJoin, formKeys } from '../lib/join.js'
 
@@ -188,15 +189,20 @@ function Content({ lesson, onPassed }) {
   switch (lesson.type) {
     case 'letters':
       return (
+        <>
         <div className="letter-grid">
           {c.letters.map((l) => (
             <div key={l.id} className="card letter-card">
               <div className="lc-letter-top"><span className="lc-letter-name">{l.name}</span><LetterAudioButton id={l.id} name={l.name} /></div>
-              <Ar big>{l.char}</Ar>
+              <LetterGlyph id={l.id} name={l.name}><Ar big>{l.char}</Ar></LetterGlyph>
+              <Makhraj makhraj={l.makhraj} />
+              <LetterPractice letter={l} />
               <Forms forms={l.forms} joins={l.joins} />
             </div>
           ))}
         </div>
+        <AudioCredit />
+        </>
       )
     case 'vowels':
       return (

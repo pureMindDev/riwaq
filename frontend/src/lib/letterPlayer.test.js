@@ -62,3 +62,16 @@ test('listeners are told about every change and can unsubscribe', async () => {
   p.toggle('ba', '/b.mp3'); await Promise.resolve(); p.stop()
   assert.ok(n >= 2); off(); const before = n; p.toggle('ta', '/t.mp3'); assert.equal(n, before)
 })
+
+test('replay restarts the same letter from the beginning and still never overlaps', async () => {
+  const made = []
+  class FakeAudio { constructor(u) { this.u = u; this.paused = false; made.push(this) } play() { return Promise.resolve() } pause() { this.paused = true } }
+  const { createLetterPlayer } = await import('./letterPlayer.js')
+  const p = createLetterPlayer(FakeAudio)
+  p.toggle('ba', '/b.mp3'); p.replay('ba', '/b.mp3')
+  assert.equal(made.length, 2)
+  assert.equal(made[0].paused, true) // the first playback was stopped, not left running
+  assert.equal(p.getSnapshot().playing, 'ba')
+  p.toggle('ba', '/b.mp3') // the button still stops
+  assert.equal(p.getSnapshot().playing, null)
+})

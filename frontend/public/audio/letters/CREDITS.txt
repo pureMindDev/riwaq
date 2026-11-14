@@ -1,0 +1,37 @@
+Riwaq: letter recordings, sources and licences
+
+Each file is the spoken NAME of one Arabic letter (e.g. "alif", "baa"), recorded by a native Arabic speaker through Lingua Libre and published on Wikimedia Commons.
+They are not articulation (makhraj) demonstrations and they are NOT Tajweed-verified.
+Changes made by us/our source: each clip was trimmed to the name, with short silence at each end, loudness-levelled and encoded as AAC (.m4a). The copies were taken with these edits from the credited public repository https://github.com/techjewel/kiddo (sounds/arabic/names/, sounds/CREDITS.md), which documents the same originals and licences.
+
+Licences: CC0 (no conditions); CC BY 4.0 https://creativecommons.org/licenses/by/4.0/ (credit the author, note changes); CC BY-SA 3.0 https://creativecommons.org/licenses/by-sa/3.0/ (credit the author, note changes, and the adapted recording stays under CC BY-SA 3.0: ba, dal, waw).
+
+Letter | File | Reader | Licence | Original on Wikimedia Commons
+Alif | alif.m4a | AlNatiq | CC0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%A7.wav
+Bā’ | ba.m4a | Zinou2go | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-Zinou2go-%D8%A8.wav
+Tā’ | ta.m4a | AlNatiq | CC0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%AA.wav
+Thā’ | tha.m4a | AlNatiq | CC0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%AB.wav
+Jīm | jim.m4a | AlNatiq | CC0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%AC.wav
+Ḥā’ | hha.m4a | AlNatiq | CC0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%AD.wav
+Khā’ | kha.m4a | AlNatiq | CC0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%AE.wav
+Dāl | dal.m4a | Zinou2go | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-Zinou2go-%D8%AF.wav
+Dhāl | dhal.m4a | AlNatiq | CC0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%B0.wav
+Rā’ | ra.m4a | AlNatiq | CC0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%B1.wav
+Zāy | zay.m4a | Rashed Aljahdali | CC BY 4.0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-Rashed_Aljahdali-%D8%B2.wav
+Sīn | sin.m4a | AlNatiq | CC0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%B3.wav
+Shīn | shin.m4a | AlNatiq | CC0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%B4.wav
+Ṣād | sad.m4a | AlNatiq | CC0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%B5.wav
+Ḍād | dad.m4a | AlNatiq | CC0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%B6.wav
+Ṭā’ | tta.m4a | AlNatiq | CC0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%B7.wav
+Ẓā’ | zha.m4a | Rashed Aljahdali | CC BY 4.0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-Rashed_Aljahdali-%D8%B8.wav
+ʿAyn | ayn.m4a | AlNatiq | CC0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%B9.wav
+Ghayn | ghayn.m4a | AlNatiq | CC0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D8%BA.wav
+Fā’ | fa.m4a | AlNatiq | CC0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D9%81.wav
+Qāf | qaf.m4a | AlNatiq | CC0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D9%82.wav
+Kāf | kaf.m4a | AlNatiq | CC0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D9%83.wav
+Lām | lam.m4a | AlNatiq | CC0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D9%84.wav
+Mīm | mim.m4a | AlNatiq | CC0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D9%85.wav
+Nūn | nun.m4a | AlNatiq | CC0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D9%86.wav
+Hā’ | ha.m4a | AlNatiq | CC0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D9%87.wav
+Wāw | waw.m4a | Zinou2go | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-Zinou2go-%D9%88.wav
+Yā’ | ya.m4a | AlNatiq | CC0 | https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-AlNatiq-%D9%8A.wav
