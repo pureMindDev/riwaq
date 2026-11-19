@@ -51,6 +51,12 @@ export function loadConfig(env = process.env) {
       // DEVELOPMENT ONLY. When true, learners can mark things done without reciting to the Muallim.
       allowSelfDeclaration: env.ALLOW_SELF_DECLARATION === 'true',
     },
+    // Optional AI letter check (the engine/ service wrapping Quran Muaalem). Separate from the Qur'an recitation engine.
+    letterEngine: {
+      url: (env.LETTER_ENGINE_URL || '').replace(/\/$/, ''),
+      key: env.LETTER_ENGINE_KEY || '',
+      timeoutMs: Number(env.LETTER_ENGINE_TIMEOUT_MS) || 20000,
+    },
     recitation: {
       engineUrl: env.RECITATION_ENGINE_URL || '',
       timeoutMs: Number(env.RECITATION_ENGINE_TIMEOUT_MS) || 30000,

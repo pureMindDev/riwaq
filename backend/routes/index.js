@@ -12,6 +12,7 @@ import { planController } from '../controllers/planController.js'
 import { milestoneController } from '../controllers/milestoneController.js'
 import { quranController } from '../controllers/quranController.js'
 import { recitationController } from '../controllers/recitationController.js'
+import { letterController } from '../controllers/letterController.js'
 
 const audioBody = express.raw({ type: ['audio/*', 'video/webm'], limit: '10mb' })
 
@@ -97,6 +98,10 @@ export function createRoutes(services) {
   // ---- recitation analysis (signed-in only: it forwards audio to a paid/limited engine)
   const rc = recitationController(services)
   r.post('/recitation/analyze', signedIn, uploadLimiter, audioBody, rc.analyze)
+
+  // ---- AI letter check (Foundation letter cards); forwards one short recording, saves nothing
+  const lc = letterController(services)
+  r.post('/letters/check', signedIn, uploadLimiter, audioBody, lc.check)
 
   return r
 }

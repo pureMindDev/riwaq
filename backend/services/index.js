@@ -1,6 +1,7 @@
 // Builds every service once and wires them together (a tiny dependency-injection container).
 import { createQuranService } from './quranFoundation.js'
 import { createRecitationEngine } from './recitationEngine.js'
+import { createLetterEngine } from './letterEngine.js'
 import { createPlanItems } from './planItems.js'
 import { createRevisionService } from './revisionService.js'
 import { createMilestoneService } from './milestoneService.js'
@@ -15,6 +16,7 @@ import { createRecitationAssessmentService } from './recitationAssessmentService
 export function createServices({ config, fetchImpl }) {
   const quran = createQuranService({ config, fetchImpl })
   const engine = createRecitationEngine({ config, fetchImpl })
+  const letterEngine = createLetterEngine({ config, fetchImpl })
   const planItems = createPlanItems()
   const hooks = {}
   const revision = createRevisionService({ config, planItems, hooks })
@@ -27,5 +29,5 @@ export function createServices({ config, fetchImpl }) {
   const auth = createAuthService({ config })
   const plan = createPlanService({ quran, passages, milestones, foundation, student })
   const recitation = createRecitationAssessmentService({ quran, engine, passages })
-  return { config, quran, engine, planItems, revision, milestones, passages, student, foundation, assessment, auth, plan, recitation }
+  return { config, quran, engine, letterEngine, planItems, revision, milestones, passages, student, foundation, assessment, auth, plan, recitation }
 }

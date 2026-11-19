@@ -108,6 +108,7 @@ export const api = {
   rateMilestoneItem: (mid, iid, input) => json('POST', `/milestones/${mid}/assessment/${iid}`, input).then((b) => b.milestone),
 
   // recitation (signed in)
+  checkLetter: (letterId, blob) => request(`/letters/check?letter=${encodeURIComponent(letterId)}`, { method: 'POST', raw: blob }),
   analyze: (blob, surah, from, to) => request(`/recitation/analyze?surah=${surah}&from=${from}&to=${to}`, { method: 'POST', raw: blob }),
 }
 

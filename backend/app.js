@@ -23,6 +23,7 @@ export function createApp({ config, services }) {
       quran: { configured: services.quran.configured, environment: services.quran.environment },
       recitation: { available: services.engine.available, validated: config.recitation.validated },
       muallim: { strict: !config.muallim.allowSelfDeclaration },
+      letterCheck: { available: services.letterEngine.available },
     }),
   )
 

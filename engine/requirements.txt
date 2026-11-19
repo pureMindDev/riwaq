@@ -1,0 +1,5 @@
+# Python 3.10+ ; ffmpeg must be installed on the machine (apt install ffmpeg)
+quran-muaalem>=0.3.0
+fastapi>=0.116
+uvicorn>=0.35
+numpy>=2.2

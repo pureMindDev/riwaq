@@ -39,7 +39,7 @@ test('health and status answer without credentials and expose no secrets', async
     assert.deepEqual([health.status, health.body], [200, { ok: true }])
     const status = await s.call('GET', '/api/status')
     assert.equal(status.status, 200)
-    assert.deepEqual(Object.keys(status.body).sort(), ['database', 'muallim', 'quran', 'recitation'])
+    assert.deepEqual(Object.keys(status.body).sort(), ['database', 'letterCheck', 'muallim', 'quran', 'recitation'])
     assert.equal(status.body.database.connected, false) // this stack opened no database
     const text = JSON.stringify(status.body)
     for (const secret of [s.config.qf.clientSecret, s.config.qf.clientId, s.config.mongoUri]) {

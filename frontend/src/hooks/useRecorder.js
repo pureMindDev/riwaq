@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 // Microphone recording. The microphone is requested only when start() is called,
 // and every stream and audio URL is released when recording ends or the page closes.
-export function useRecorder() {
+export function useRecorder({ onRecorded } = {}) {
   const [phase, setPhase] = useState('idle') // idle | recording | recorded
   const [blob, setBlob] = useState(null)
   const [url, setUrl] = useState(null)
@@ -10,6 +10,8 @@ export function useRecorder() {
   const streamRef = useRef(null)
   const recRef = useRef(null)
   const urlRef = useRef(null)
+  const doneRef = useRef(onRecorded)
+  useEffect(() => { doneRef.current = onRecorded }) // always the latest callback
 
   const clear = useCallback(() => {
     if (urlRef.current) URL.revokeObjectURL(urlRef.current)
@@ -35,6 +37,7 @@ export function useRecorder() {
         const b = new Blob(chunks, { type: rec.mimeType || 'audio/webm' })
         urlRef.current = URL.createObjectURL(b)
         setBlob(b); setUrl(urlRef.current); setPhase('recorded')
+        doneRef.current?.(b)
       }
       recRef.current = rec
       rec.start()
