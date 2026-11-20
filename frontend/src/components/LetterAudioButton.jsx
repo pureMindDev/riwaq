@@ -48,14 +48,14 @@ export function LetterGlyph({ id, name, children }) {
   )
 }
 
-// Attribution required by the recordings' licences (CC BY / CC BY-SA). Shown only when recordings are listed.
+// Attribution required by the recordings' licences (CC BY / CC BY-SA / GFDL). Shown only when recordings are listed.
 export function AudioCredit() {
   const [on, setOn] = useState(false)
   useEffect(() => { let live = true; loadLetterAudio().then((f) => { if (live) setOn(Object.keys(f).length > 0) }); return () => { live = false } }, [])
   if (!on) return null
   return (
     <p className="muted small-print audio-credit">
-      Letter names are spoken by native Arabic speakers (Lingua Libre, via Wikimedia Commons; CC0, CC BY and CC BY-SA). They say the letter&rsquo;s name and are not Tajweed-checked.{' '}
+      Letter names are spoken by native Arabic speakers (Lingua Libre, via Wikimedia Commons; CC0, CC BY and CC BY-SA; Bā&rsquo; is a temporary clip from a recording by Ibraheem alex, GFDL 1.2+). They say the letter&rsquo;s name and are not Tajweed-checked.{' '}
       <a href="/audio/letters/CREDITS.txt" target="_blank" rel="noreferrer">Credits and licences</a>
     </p>
   )

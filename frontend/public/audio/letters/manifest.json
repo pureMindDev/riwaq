@@ -11,13 +11,14 @@
   },
   "ba": {
     "file": "ba.m4a",
-    "kind": "letter name",
-    "reader": "Zinou2go",
-    "readerType": "native Arabic speaker (Lingua Libre contributor)",
-    "licence": "CC BY-SA 3.0",
-    "source": "https://commons.wikimedia.org/wiki/File:LL-Q13955_(ara)-Zinou2go-%D8%A8.wav",
-    "originalFile": "LL-Q13955 (ara)-Zinou2go-ب.wav",
-    "verification": "none: native-speaker recording; NOT Tajweed-verified"
+    "kind": "letter name (temporary)",
+    "reader": "Ibraheem alex",
+    "readerType": "native Arabic speaker; recording of the whole alphabet, this clip cut from it",
+    "licence": "GFDL 1.2+",
+    "source": "https://commons.wikimedia.org/wiki/File:%D8%AD%D8%B1%D9%88%D9%81_%D8%A7%D9%84%D8%A3%D8%A8%D8%AC%D8%AF%D9%8A%D8%A9_%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9_Arabic_alphabet.ogg",
+    "originalFile": "حروف الأبجدية العربية Arabic alphabet.ogg",
+    "verification": "none: NOT Tajweed-verified",
+    "note": "TEMPORARY: cut from a recording of the whole alphabet (not a dedicated single-letter recording), chosen because the previous Ba clip was only a 0.04 s pop. Replace with a dedicated, openly licensed recording when one is found."
   },
   "ta": {
     "file": "ta.m4a",
