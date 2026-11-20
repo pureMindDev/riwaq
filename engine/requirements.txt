@@ -1,5 +1,6 @@
 # Python 3.10+ ; ffmpeg must be installed on the machine (apt install ffmpeg)
 quran-muaalem>=0.3.0
+transformers>=4.55,<5  # quran-muaalem 0.3.0 breaks on transformers 5.x
 fastapi>=0.116
 uvicorn>=0.35
 numpy>=2.2

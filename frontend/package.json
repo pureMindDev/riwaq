@@ -9,7 +9,9 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "node --test \"src/**/*.test.js\"",
-    "check:audio": "node scripts/check-letter-audio.mjs"
+    "check:audio": "node scripts/check-letter-audio.mjs",
+    "check:audio:quality": "node scripts/audio-quality.mjs",
+    "import:audio": "node scripts/import-letter-audio.mjs"
   },
   "dependencies": {
     "react": "^19.3.1",

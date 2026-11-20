@@ -15,22 +15,30 @@ core features if you ever charge. Read the licence in the package before launchi
 
 ## Run it on your computer (first test)
 ```bash
-# 1. ffmpeg:   sudo apt install ffmpeg      (macOS: brew install ffmpeg ; Windows: install ffmpeg and add it to PATH)
+# 1. ffmpeg:   sudo apt install ffmpeg      (macOS: brew install ffmpeg ; Windows: see "Windows notes" below)
 # 2. Python 3.10+ virtual environment
 cd engine
-python -m venv .venv && source .venv/bin/activate        # Windows: .venv\Scripts\activate
+python -m venv .venv && source .venv/bin/activate        # Windows PowerShell: .venv\Scripts\activate ; Git Bash: source .venv/Scripts/activate
 pip install -r requirements.txt                          # large: installs PyTorch (a few GB)
 # 3. choose a secret and start (first start downloads the model from Hugging Face, about 2.5 GB)
 export ENGINE_API_KEY="choose-a-long-random-secret"      # Windows PowerShell: $env:ENGINE_API_KEY="..."
 uvicorn server:app --port 8000
 # 4. check it is alive:  curl http://localhost:8000/health   ->  {"ok":true,...}
 ```
+### Windows notes (tested on Windows 11 / Git Bash, Python 3.12)
+- Install Python and ffmpeg with `winget install Python.Python.3.12` and `winget install Gyan.FFmpeg`. Git Bash does not see a new PATH until you open a NEW window, and `python` may not be found even then; the full path (`~/AppData/Local/Programs/Python/Python312/python.exe`) works.
+- If ffmpeg is still "not found" in Git Bash, add it for that window: `export PATH="$PATH:$HOME/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-<version>-full_build/bin"`. Without ffmpeg every recording is rejected with "That recording could not be used".
+- **Every new terminal window must activate the virtual environment first** (or `uvicorn` is "command not found").
+- `requirements.txt` pins `transformers<5`: quran-muaalem 0.3.0 fails to import on transformers 5.x (`cannot import name '_HIDDEN_STATES_START_POSITION'`).
+- On a slow or unstable connection the 2.4 GB model download can stall or drop. Use the plain downloader and a longer timeout, then simply run the same command again; it resumes: `export HF_HUB_DISABLE_XET=1 HF_HUB_DOWNLOAD_TIMEOUT=120`.
+
 CPU works (each check takes a few seconds). A GPU with ~1.5 GB of memory is much faster (`ENGINE_DEVICE=cuda`).
 
 ## Connect it to Riwaq (backend/.env)
 ```
 LETTER_ENGINE_URL=http://localhost:8000
 LETTER_ENGINE_KEY=<the same ENGINE_API_KEY>
+LETTER_PROOF_SECRET=<any long random text>   # signs the receipt for spoken quiz questions (see docs/LETTER_AUDIO.md)
 ```
 Restart the backend. `GET /api/status` then shows `letterCheck.available: true`, and letter cards use the AI check
 instead of the browser's speech recognition.

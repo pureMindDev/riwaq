@@ -24,7 +24,7 @@ export function createServices({ config, fetchImpl }) {
   hooks.afterRevise = (userId, timezone) => milestones.evaluate(userId, timezone)
   const passages = createPassageService({ config, quran, milestones, planItems })
   const student = createStudentService({ quran, milestones })
-  const foundation = createFoundationService({ config, planItems })
+  const foundation = createFoundationService({ config, planItems, letterEngine })
   const assessment = createAssessmentService()
   const auth = createAuthService({ config })
   const plan = createPlanService({ quran, passages, milestones, foundation, student })

@@ -6,9 +6,10 @@ import { letterCheckAvailable } from '../lib/engineStatus.js'
 import { useLetterListen } from '../hooks/useLetterListen.js'
 import { judgeLetter, syllableFor } from '../lib/letterCheck.js'
 import { Icon } from './Icons.jsx'
+import AiVerdict from './AiVerdict.jsx'
+import { activeRecorder } from '../lib/activeRecorder.js'
 
 const MAX_MS = 5000
-let stopActive = null // only one letter records at a time
 
 // Where the letter is made, from the curriculum (never invented in the browser).
 export function Makhraj({ makhraj }) {
@@ -50,13 +51,13 @@ export default function LetterPractice({ letter }) {
   // The reference starting silences my recording, and vice versa.
   useEffect(() => { if (snap.playing && audioRef.current) { audioRef.current.pause(); setMine(false) } }, [snap.playing])
   const stopMe = useCallback(() => { clearTimeout(timer.current); stop() }, [stop])
-  useEffect(() => () => { clearTimeout(timer.current); if (stopActive === stopMe) stopActive = null }, [stopMe])
+  useEffect(() => () => { clearTimeout(timer.current); activeRecorder.release(stopMe) }, [stopMe])
 
   async function begin() {
     letterPlayer.stop()
     audioRef.current?.pause(); setMine(false)
-    if (stopActive && stopActive !== stopMe) stopActive()
-    if (await start()) { stopActive = stopMe; timer.current = setTimeout(stopMe, MAX_MS) }
+    activeRecorder.stopOthers(stopMe)
+    if (await start()) { activeRecorder.set(stopMe); timer.current = setTimeout(stopMe, MAX_MS) }
   }
   function playMine() {
     const a = audioRef.current
@@ -70,15 +71,15 @@ export default function LetterPractice({ letter }) {
   async function beginAi() {
     letterPlayer.stop()
     audioRef.current?.pause(); setMine(false)
-    if (stopActive && stopActive !== stopMe) stopActive()
+    activeRecorder.stopOthers(stopMe)
     purpose.current = 'check'
     setAi({ phase: 'recording' })
-    if (await start()) { stopActive = stopMe; timer.current = setTimeout(stopMe, 4000) } else { purpose.current = 'compare'; setAi({ phase: 'idle' }) }
+    if (await start()) { activeRecorder.set(stopMe); timer.current = setTimeout(stopMe, 4000) } else { purpose.current = 'compare'; setAi({ phase: 'idle' }) }
   }
   function beginCheck() {
     letterPlayer.stop()
     audioRef.current?.pause(); setMine(false)
-    if (stopActive) stopActive()
+    activeRecorder.stopAny()
     check.listen()
   }
   const verdict = check.phase === 'done' && !check.error ? judgeLetter(letter, check.alternatives) : null
@@ -97,17 +98,7 @@ export default function LetterPractice({ letter }) {
               <Icon name="mic" size={18} /> {ai.phase === 'checking' ? 'Checking…' : ai.phase === 'done' ? 'Try again' : 'Check me'} <span className="beta">AI</span>
             </button>
           )}
-          <div className="check-result" role="status" aria-live="polite">
-            {ai.phase === 'done' && ai.result.result === 'match' && <p className="verdict verdict-ok"><Icon name="check" size={18} /> Correct</p>}
-            {ai.phase === 'done' && ai.result.result === 'fix' && (
-              <div className="verdict verdict-bad verdict-col"><span><Icon name="alert" size={18} /> Right letter, but not yet right. Fix this and try again:</span>
-                <ul>{ai.result.hints.map((h) => <li key={h.message}>{h.message}</li>)}</ul></div>
-            )}
-            {ai.phase === 'done' && ai.result.result === 'miss' && <p className="verdict verdict-bad"><Icon name="alert" size={18} /> Not yet: I heard <span dir="rtl" lang="ar">{ai.result.heard}</span> but this letter is <span dir="rtl" lang="ar">{ai.result.expected}</span>. Listen to the recording and try again.</p>}
-            {ai.phase === 'done' && ai.result.result === 'none' && <p className="verdict verdict-bad"><Icon name="alert" size={18} /> I did not hear a letter. Try again, a little louder and closer to the microphone.</p>}
-            {ai.phase === 'error' && <p className="verdict verdict-bad"><Icon name="alert" size={18} /> {ai.message}</p>}
-            {rec.error && ai.phase !== 'recording' && <p className="verdict verdict-bad"><Icon name="alert" size={18} /> {rec.error}</p>}
-          </div>
+          <AiVerdict ai={ai} recError={rec.error} />
           <p className="muted small-print practice-note">AI checker (experimental): it can make mistakes, so use it as a guide and not as a final judge. Your recording is sent to Riwaq’s checker and not stored.</p>
         </>
       ) : check.supported ? (

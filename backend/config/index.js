@@ -1,3 +1,5 @@
+import { randomBytes } from 'node:crypto'
+
 // All configuration comes from environment variables. Nothing secret is hard-coded.
 const ENVIRONMENTS = {
   prelive: { auth: 'https://prelive-oauth2.quran.foundation', api: 'https://apis-prelive.quran.foundation' },
@@ -56,6 +58,9 @@ export function loadConfig(env = process.env) {
       url: (env.LETTER_ENGINE_URL || '').replace(/\/$/, ''),
       key: env.LETTER_ENGINE_KEY || '',
       timeoutMs: Number(env.LETTER_ENGINE_TIMEOUT_MS) || 20000,
+      // Signs the "the checker said correct" receipt that spoken quiz questions need. Set it when running more than one
+      // server (or restarting often); otherwise a random secret per process is used and receipts end on restart.
+      proofSecret: env.LETTER_PROOF_SECRET || randomBytes(32).toString('hex'),
     },
     recitation: {
       engineUrl: env.RECITATION_ENGINE_URL || '',

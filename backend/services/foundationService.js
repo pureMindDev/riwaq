@@ -4,6 +4,7 @@ import { Student } from '../models/Student.js'
 import { StudyLog } from '../models/StudyLog.js'
 import { DailyPlan } from '../models/DailyPlan.js'
 import { todayIn } from '../utils/dates.js'
+import { verifyProof } from '../utils/voiceProof.js'
 
 const ZWJ = '\u200D' // asks the browser to draw the joined form of a letter
 const byId = new Map(LETTERS.map((l) => [l.id, l]))
@@ -23,16 +24,32 @@ const drillCell = (r, c) => ({ letter: consonants[(r * 5 + c * 3) % consonants.l
 const AREAS = ['Al-Jawf (open space)', 'Al-Ḥalq (throat)', 'Al-Lisān (tongue)', 'Ash-Shafatayn (lips)', 'Al-Khayshūm (nasal passage)']
 const AREA_QUESTIONS = [['ب', 3], ['ف', 3], ['ح', 1], ['ع', 1], ['ق', 2], ['ك', 2]]
 
-// The fixed question set for a lesson: [{ id, prompt, display, answer, pool }].
+// Letters lessons test three things: see a letter and give its NAME, hear a letter and pick it, and (only when the AI
+// letter checker is running) SAY a letter. The hardest letters to tell apart are the ones that are spoken first.
+const SAY_COUNT = 4
+const SAY_PRIORITY = ['hha', 'kha', 'ayn', 'ghayn', 'sad', 'dad', 'tta', 'zha', 'qaf', 'tha', 'dhal', 'shin', 'jim', 'ha', 'alif', 'zay', 'sin', 'kaf', 'ta', 'dal', 'ba', 'ra', 'fa', 'lam', 'mim', 'nun', 'waw', 'ya']
+const FATHA = 'َ'
+const sayDisplay = (l) => (l.id === 'alif' ? 'أ' : l.char) + FATHA // Tajweed/Qaida style; alif is taught as hamza with fatha
+const sayLetterIds = (ids) => [...ids].sort((a, b) => SAY_PRIORITY.indexOf(a) - SAY_PRIORITY.indexOf(b)).slice(0, SAY_COUNT)
+
+// The fixed question set for a lesson: [{ id, kind, prompt, display, answer, pool }].
+// `kind` is 'choice' (default), 'listen' (play the letter's recording, pick the letter) or 'say' (spoken; only with
+// `voice: true`; the "answer" is a signed receipt from the AI checker, see utils/voiceProof.js, so it has no `pool`).
 // `pool` is where wrong choices come from. The answer never leaves the server.
-export function quizDefinition(lessonId) {
+export function quizDefinition(lessonId, { voice = false } = {}) {
   const lesson = LESSONS.find((l) => l.id === lessonId)
   if (!lesson?.quiz) return []
   if (lesson.type === 'letters') {
-    return lesson.letterIds.map((id) => {
+    const names = lesson.letterIds.map((id) => {
       const l = byId.get(id)
       return { id: `name:${id}`, prompt: 'What is the name of this letter?', display: l.char, answer: l.name, pool: LETTERS.map((x) => x.name) }
     })
+    const listen = lesson.letterIds.map((id) => {
+      const l = byId.get(id)
+      return { id: `listen:${id}`, kind: 'listen', letterId: id, prompt: 'Listen. Which letter did you hear?', display: '', answer: l.char, pool: LETTERS.map((x) => x.char) }
+    })
+    const say = voice ? sayLetterIds(lesson.letterIds).map((id) => ({ id: `say:${id}`, kind: 'say', letterId: id, prompt: 'Say this letter aloud', display: sayDisplay(byId.get(id)), answer: null })) : []
+    return [...names, ...listen, ...say]
   }
   if (lesson.type === 'vowels') {
     const picks = ['ba', 'ta', 'jim', 'sin', 'kaf', 'mim']
@@ -76,17 +93,21 @@ export function quizDefinition(lessonId) {
   return []
 }
 
-function buildQuiz(lessonId) {
-  return quizDefinition(lessonId).map((q) => {
+function buildQuiz(lessonId, voice) {
+  return quizDefinition(lessonId, { voice }).map((q) => {
+    const kind = q.kind || 'choice'
+    if (kind === 'say') return { id: q.id, kind, prompt: q.prompt, display: q.display, letterId: q.letterId }
     const wrong = shuffle([...new Set(q.pool)].filter((x) => x !== q.answer)).slice(0, 3)
-    return { id: q.id, prompt: q.prompt, display: q.display, choices: shuffle([q.answer, ...wrong]) }
+    return { id: q.id, kind, prompt: q.prompt, display: q.display, ...(q.letterId ? { letterId: q.letterId } : {}), choices: shuffle([q.answer, ...wrong]) }
   })
 }
 
 // The score counts ALL questions of the lesson, so skipping questions cannot help.
-export function gradeQuiz(lessonId, answers) {
-  const def = quizDefinition(lessonId)
-  const wrong = def.filter((q) => !answers || answers[q.id] !== q.answer).map((q) => q.id)
+// A spoken question is right only with a valid, unexpired receipt for this learner and letter.
+export function gradeQuiz(lessonId, answers, { voice = false, userId, secret, now } = {}) {
+  const def = quizDefinition(lessonId, { voice })
+  const isRight = (q) => (q.kind === 'say' ? verifyProof(secret, userId, q.letterId, answers?.[q.id], now) : answers?.[q.id] === q.answer)
+  const wrong = def.filter((q) => !answers || !isRight(q)).map((q) => q.id)
   const score = def.length - wrong.length
   return { score, total: def.length, passed: def.length > 0 && score / def.length >= QUIZ_PASS_RATIO, wrong }
 }
@@ -142,7 +163,9 @@ function content(lesson) {
   }
 }
 
-export function createFoundationService({ config, planItems }) {
+export function createFoundationService({ config, planItems, letterEngine }) {
+  // Spoken quiz questions exist only while the AI letter checker is configured; without it the quiz is as before.
+  const voice = () => Boolean(letterEngine?.available)
   const completed = async (userId) => (await Student.findOne({ user: userId }).lean())?.foundation?.completedLessons || []
 
   async function nextLesson(userId) {
@@ -191,14 +214,14 @@ export function createFoundationService({ config, planItems }) {
         readalongPassed: lesson.type === 'readalong' ? Boolean(student?.foundation.readalongPassed) : undefined,
         // Additive: a saved passing quiz result survives a reload, so "Complete lesson" stays available.
         quizPassed: lesson.quiz ? Boolean(student?.foundation.quizResults?.some((r) => r.lessonId === lesson.id && r.passed)) : undefined,
-        content: content(lesson), quiz: lesson.quiz ? { passRatio: QUIZ_PASS_RATIO, questions: buildQuiz(lesson.id) } : null,
+        content: content(lesson), quiz: lesson.quiz ? { passRatio: QUIZ_PASS_RATIO, questions: buildQuiz(lesson.id, voice()) } : null,
       }
     },
 
     async submitQuiz(userId, lessonId, answers) {
       const { lesson } = await assertAccess(userId, lessonId)
       if (!lesson.quiz) throw new AppError('NO_QUIZ', 'This lesson has no quiz.', 400)
-      const result = gradeQuiz(lessonId, answers)
+      const result = gradeQuiz(lessonId, answers, { voice: voice(), userId: String(userId), secret: config?.letterEngine?.proofSecret })
       await Student.updateOne({ user: userId }, { $push: { 'foundation.quizResults': { lessonId, score: result.score, total: result.total, passed: result.passed } } })
       return result
     },

@@ -4,6 +4,7 @@ import assert from 'node:assert/strict'
 import http from 'node:http'
 import { startStack, dbSkip } from './helpers.js'
 import { LETTERS } from '../config/foundationCurriculum.js'
+import { quizDefinition } from '../services/foundationService.js'
 
 let s, engine, mode = 'match', seen = []
 before(async () => {
@@ -79,4 +80,35 @@ test('not configured: 501 and status says unavailable', { skip: dbSkip }, async 
     const r = await t.call('POST', '/api/letters/check?letter=ba', { token, raw: Buffer.from('a'), headers: { 'Content-Type': 'audio/webm' } })
     assert.deepEqual([r.status, r.body.error.code], [501, 'LETTER_ENGINE_NOT_CONFIGURED'])
   } finally { await t.close() }
+})
+
+test('quiz: listening and spoken questions are served without answers; a spoken one is right only with the checker\'s receipt for this learner', { skip: dbSkip }, async () => {
+  const a = await s.register()
+  const b = await s.register()
+  const lesson = (await s.call('GET', '/api/foundation/lessons/letters-1', { token: a.token })).body.lesson
+  const qs = lesson.quiz.questions
+  const kinds = (k) => qs.filter((q) => q.kind === k)
+  assert.deepEqual([kinds('choice').length, kinds('listen').length, kinds('say').length], [7, 7, 4])
+  assert.ok(kinds('listen').every((q) => q.letterId && q.display === '' && q.choices.length === 4 && q.choices.every((c) => LETTERS.some((l) => l.char === c))))
+  assert.ok(kinds('say').every((q) => q.letterId && q.display.endsWith('\u064E') && !('choices' in q)))
+  assert.ok(!JSON.stringify(qs).includes('"answer"'))
+
+  const def = quizDefinition('letters-1') // names + listening, with their answers
+  const base = Object.fromEntries(def.map((q) => [q.id, q.answer]))
+  const quiz = (token, answers) => s.call('POST', '/api/foundation/lessons/letters-1/quiz', { token, body: { answers } }).then((r) => r.body)
+  let r = await quiz(a.token, base)
+  assert.deepEqual([r.score, r.total, r.passed], [14, 18, false]) // every written/listening answer right, nothing spoken
+
+  mode = 'fix'
+  assert.ok(!('proof' in (await check(a.token, 'kha')).body)) // "right letter but not right yet" earns no receipt
+  mode = 'miss'
+  mode = 'match'
+  const proof = (await check(a.token, 'hha')).body.proof
+  assert.equal(typeof proof, 'string')
+  r = await quiz(a.token, { ...base, 'say:hha': proof })
+  assert.deepEqual([r.score, r.total, r.passed], [15, 18, true])
+
+  const mine = (await check(b.token, 'hha')).body.proof
+  r = await quiz(a.token, { ...base, 'say:hha': mine, 'say:kha': proof }) // someone else's receipt, and a receipt for another letter
+  assert.deepEqual([r.score, r.passed, r.wrong.sort()], [14, false, ['say:hha', 'say:jim', 'say:kha', 'say:tha']])
 })

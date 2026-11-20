@@ -11,6 +11,7 @@ import { api } from '../services/api.js'
 import { Icon } from '../components/Icons.jsx'
 import LetterAudioButton, { LetterGlyph, AudioCredit } from '../components/LetterAudioButton.jsx'
 import LetterPractice, { Makhraj } from '../components/LetterPractice.jsx'
+import { ListenQuestion, SayQuestion } from '../components/QuizVoice.jsx'
 import { attemptsLabel, bestScore, scoreLabel } from '../lib/lessonStats.js'
 import { showJoin, formKeys } from '../lib/join.js'
 
@@ -280,22 +281,28 @@ function Quiz({ lesson, onPassed, onSubmitted }) {
   return (
     <form className="stack" onSubmit={submit} aria-labelledby="quiz-h">
       <h2 id="quiz-h">Quiz</h2>
-      <p className="muted">Answer at least {Math.round(lesson.quiz.passRatio * 100)}% correctly to complete this lesson. You can retry as often as you like.</p>
+      <p className="muted">Answer at least {Math.round(lesson.quiz.passRatio * 100)}% correctly to complete this lesson. You can retry as often as you like.{qs.some((q) => q.kind === 'say') && ' Some questions ask you to listen, and some ask you to say a letter aloud to the AI checker; each counts toward your score.'}</p>
       {qs.map((q) => (
         <fieldset key={q.id} className={`card field ${result?.wrong.includes(q.id) ? 'q-wrong' : ''}`}>
           <legend>{q.prompt}</legend>
-          <Ar big>{q.display}</Ar>
-          <div className="choices">
-            {q.choices.map((c) => (
-              <label key={c} className="radio"><input type="radio" name={q.id} checked={answers[q.id] === c} onChange={() => setAnswers({ ...answers, [q.id]: c })} /> {c}</label>
-            ))}
-          </div>
-          {result?.wrong.includes(q.id) && <p className="form-error">Not quite. Look at this one again.</p>}
+          {q.display && <Ar big>{q.display}</Ar>}
+          {q.kind === 'listen' ? (
+            <ListenQuestion q={q} value={answers[q.id]} onChange={(c) => setAnswers({ ...answers, [q.id]: c })} />
+          ) : q.kind === 'say' ? (
+            <SayQuestion q={q} proof={answers[q.id]} onProof={(p) => setAnswers((a) => ({ ...a, [q.id]: p }))} />
+          ) : (
+            <div className="choices">
+              {q.choices.map((c) => (
+                <label key={c} className="radio"><input type="radio" name={q.id} checked={answers[q.id] === c} onChange={() => setAnswers({ ...answers, [q.id]: c })} /> {c}</label>
+              ))}
+            </div>
+          )}
+          {result?.wrong.includes(q.id) && <p className="form-error">{q.kind === 'say' ? 'Not counted yet. Say it again until you get a green “Correct”, then check your answers again.' : 'Not quite. Look at this one again.'}</p>}
         </fieldset>
       ))}
       <p className="form-error" role="alert">{error}</p>
       {result && <p className={result.passed ? 'form-ok' : 'form-error'} role="status">{result.passed ? `Well done: ${result.score} of ${result.total} correct.` : `${result.score} of ${result.total} correct. Review the lesson and try again.`}</p>}
-      <div><button type="submit" className="btn btn-primary" disabled={busy || Object.keys(answers).length < qs.length}>Check my answers</button></div>
+      <div><button type="submit" className="btn btn-primary" disabled={busy || qs.some((q) => q.kind !== 'say' && !answers[q.id])}>Check my answers</button></div>
     </form>
   )
 }

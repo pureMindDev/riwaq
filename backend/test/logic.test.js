@@ -4,7 +4,8 @@ import assert from 'node:assert/strict'
 import { rangeCovered, juzCoverage, gaps } from '../utils/juz.js'
 import { recommend } from '../services/assessmentService.js'
 import { quizDefinition, gradeQuiz } from '../services/foundationService.js'
-import { LESSONS, LETTERS } from '../config/foundationCurriculum.js'
+import { LESSONS, LETTERS, QUIZ_PASS_RATIO } from '../config/foundationCurriculum.js'
+import { issueProof, verifyProof, PROOF_TTL_MS } from '../utils/voiceProof.js'
 import { ANSWERS } from './helpers.js'
 
 test('rangeCovered: needs every verse, across touching passages', () => {
@@ -61,9 +62,65 @@ test('quiz grading counts every question, so skipping cannot pass', () => {
   const oneRight = { [def[0].id]: def[0].answer }
   const g = gradeQuiz('letters-1', oneRight)
   assert.deepEqual([g.score, g.total, g.passed], [1, def.length, false])
-  const sixOfSeven = { ...all, [def[0].id]: 'wrong' }
-  assert.equal(gradeQuiz('letters-1', sixOfSeven).passed, true) // 6/7 >= 80%
-  assert.equal(gradeQuiz('letters-1', { ...sixOfSeven, [def[1].id]: 'wrong' }).passed, false) // 5/7 < 80%
+  // 80% pass mark: the most misses that still pass is floor(20%), one more fails.
+  const canMiss = Math.floor(def.length * (1 - QUIZ_PASS_RATIO) + 1e-9)
+  const miss = (n) => ({ ...all, ...Object.fromEntries(def.slice(0, n).map((q) => [q.id, 'wrong'])) })
+  assert.equal(gradeQuiz('letters-1', miss(canMiss)).passed, true)
+  assert.equal(gradeQuiz('letters-1', miss(canMiss + 1)).passed, false)
+})
+
+test('letters quizzes: every letter is asked by name AND by ear; the listening answer is the letter itself', () => {
+  for (const l of LESSONS.filter((x) => x.type === 'letters')) {
+    const def = quizDefinition(l.id)
+    assert.equal(def.length, l.letterIds.length * 2, l.id)
+    const byLetter = Object.fromEntries(LETTERS.map((x) => [x.id, x]))
+    for (const id of l.letterIds) {
+      const q = def.find((x) => x.id === `listen:${id}`)
+      assert.equal(q.kind, 'listen')
+      assert.equal(q.answer, byLetter[id].char)
+      assert.equal(q.display, '') // the question is the recording: the letter must not be printed
+      assert.ok(q.pool.length === 28 && new Set(q.pool).size === 28)
+      assert.ok(def.some((x) => x.id === `name:${id}`))
+    }
+  }
+})
+
+test('spoken quiz questions exist only with voice on, are right only with a valid receipt, and cannot be forged', () => {
+  const secret = 's3cret'
+  const off = quizDefinition('letters-1')
+  const on = quizDefinition('letters-1', { voice: true })
+  assert.equal(off.some((q) => q.kind === 'say'), false)
+  const say = on.filter((q) => q.kind === 'say')
+  assert.equal(say.length, 4)
+  assert.deepEqual(say.map((q) => q.letterId), ['hha', 'kha', 'tha', 'jim']) // hardest-to-tell-apart letters first
+  assert.ok(say.every((q) => q.display.endsWith('\u064E') && !('pool' in q)))
+  const base = Object.fromEntries(on.filter((q) => q.kind !== 'say').map((q) => [q.id, q.answer]))
+  const ctx = { voice: true, userId: 'u1', secret }
+  const g0 = gradeQuiz('letters-1', base, ctx)
+  assert.deepEqual([g0.score, g0.total, g0.passed], [14, 18, false]) // skipping every spoken question fails: 14/18 < 80%
+  const proofs = Object.fromEntries(say.map((q) => [q.id, issueProof(secret, 'u1', q.letterId)]))
+  assert.equal(gradeQuiz('letters-1', { ...base, ...proofs }, ctx).passed, true)
+  // One receipt is enough to pass when everything else is right (15/18), none is not.
+  assert.equal(gradeQuiz('letters-1', { ...base, [say[0].id]: proofs[say[0].id] }, ctx).passed, true)
+  // Forgery attempts: another learner's receipt, another letter's, a wrong secret, an expired one, junk, the letter itself.
+  const bad = [issueProof(secret, 'u2', 'hha'), issueProof(secret, 'u1', 'kha'), issueProof('other', 'u1', 'hha'), issueProof(secret, 'u1', 'hha', Date.now() - 3600_000), 'x.y', '', 123, 'ح']
+  for (const b of bad) assert.equal(gradeQuiz('letters-1', { ...base, 'say:hha': b }, ctx).score, 14, String(b))
+  // With the checker off at grading time the spoken questions simply are not part of the score.
+  assert.deepEqual(((g) => [g.score, g.total])(gradeQuiz('letters-1', base, { voice: false })), [14, 14])
+})
+
+test('voice receipts: valid, expired, tampered, wrong user/letter/secret', () => {
+  const now = 1_000_000_000_000
+  const p = issueProof('k', 'u1', 'ba', now)
+  assert.equal(verifyProof('k', 'u1', 'ba', p, now + 1000), true)
+  assert.equal(verifyProof('k', 'u1', 'ba', p, now + PROOF_TTL_MS + 1), false)
+  assert.equal(verifyProof('k', 'u2', 'ba', p, now), false)
+  assert.equal(verifyProof('k', 'u1', 'ta', p, now), false)
+  assert.equal(verifyProof('z', 'u1', 'ba', p, now), false)
+  const [exp, sig] = p.split('.')
+  assert.equal(verifyProof('k', 'u1', 'ba', `${Number(exp) + 99999999}.${sig}`, now), false) // extending the expiry breaks the signature
+  assert.equal(verifyProof('k', 'u1', 'ba', `${exp}.${sig.replace(/.$/, sig.endsWith('0') ? '1' : '0')}`, now), false)
+  assert.equal(verifyProof('', 'u1', 'ba', p, now), false)
 })
 
 test('curriculum data is consistent: 28 letters, unique ids, six non-joining letters', () => {

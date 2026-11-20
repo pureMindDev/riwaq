@@ -230,3 +230,9 @@ fieldset.card.field > .arabic-big { align-self: center; min-width: 5.5rem; text-
 .verdict .icon { flex: none; }
 .verdict-col { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
 .verdict-col ul { margin: 0; padding-left: 1.2rem; font-weight: 500; }
+
+/* Quiz: listen-and-choose and say-it questions */
+.listen-btn { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 48px; align-self: flex-start; }
+.listen-btn.is-playing { background: var(--emerald-900, #064e3b); }
+.choices-ar .radio { justify-content: center; }
+.choices-ar .arabic { font-size: 1.9rem; line-height: 1.5; }
