@@ -76,3 +76,24 @@ Do not expose port 8000 without the key set.
 ## Before telling people about it
 - Tell a qualified teacher to review the letter recordings, the makhraj notes, and a sample of AI corrections. The AI checker's accuracy on real learners is not measured.
 - Keep the Quran Foundation and Islamic Network credit visible. Read `docs/DEPLOYMENT.md` for rate limits and backups.
+
+
+## Your chosen hosts: Render (backend) and Vercel (frontend)
+Order matters, because each needs the other's address.
+
+1. **MongoDB Atlas** first (section 2). Keep the connection string.
+2. **Render:** New + > Blueprint, pick your GitHub repo (it reads `render.yaml`), or New + > Web Service with root `backend`, build `npm ci --omit=dev`, start `npm start`.
+   Fill in the empty variables on the Environment page: `MONGODB_URI`, `QF_CLIENT_ID`, `QF_CLIENT_SECRET`, `LETTER_PROOF_SECRET`, and `CORS_ORIGINS` (put a placeholder for now, fix it in step 4).
+   Leave `LETTER_ENGINE_URL` and `LETTER_ENGINE_KEY` empty until the engine exists. When it deploys, open `https://YOUR-API.onrender.com/api/status`.
+3. **Vercel:** Add New > Project, import the repo, set **Root Directory** to `frontend` (Framework: Vite is detected). Add the environment variable
+   `VITE_API_BASE_URL` = `https://YOUR-API.onrender.com/api`, then Deploy. `frontend/vercel.json` makes page reloads work.
+4. Go back to Render and set `CORS_ORIGINS` to your Vercel address exactly (for example `https://riwaq.vercel.app`, no slash at the end). Render redeploys by itself.
+   If you later add your own domain, list both addresses separated by a comma.
+5. Open the Vercel address, sign up, and check section 6 of this guide.
+
+Things to know about the free plans:
+- A free Render web service **sleeps after about 15 minutes without traffic** and takes up to a minute to wake, so the first visit can be slow (and the first request may time out; reload). A paid instance stays awake.
+- The database is Atlas, not Render, so nothing is lost when Render sleeps or redeploys.
+- Vercel's free (Hobby) plan is meant for personal, non-commercial projects. Riwaq is free to learners; if you ever charge or take donations through it, check Vercel's terms or use Cloudflare Pages instead.
+- The AI engine cannot run on Render's free plan or Vercel (too little memory). Use a VPS (section 5), or a paid Render instance with at least 4 GB.
+- After each `git push`, Render and Vercel redeploy by themselves. Environment variable changes on Render redeploy the backend; a change to `VITE_API_BASE_URL` on Vercel needs a new deploy of the frontend (Deployments > Redeploy).

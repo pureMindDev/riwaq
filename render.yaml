@@ -1,0 +1,36 @@
+# Render Blueprint for the backend (UNTESTED: written from Render's documented format; see docs/HOSTING.md).
+# Secrets are left empty on purpose: fill them in on Render's Environment page. Never commit real values.
+services:
+  - type: web
+    name: riwaq-api
+    runtime: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 22.12.0
+      - key: TRUST_PROXY
+        value: "1"
+      - key: QF_ENV
+        value: prelive
+      - key: QURAN_FALLBACK
+        value: alquran
+      - key: ALLOW_SELF_DECLARATION
+        value: "false"
+      - key: MONGODB_URI
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: QF_CLIENT_ID
+        sync: false
+      - key: QF_CLIENT_SECRET
+        sync: false
+      - key: LETTER_PROOF_SECRET
+        sync: false
+      - key: LETTER_ENGINE_URL
+        sync: false
+      - key: LETTER_ENGINE_KEY
+        sync: false
