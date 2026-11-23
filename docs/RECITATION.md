@@ -91,3 +91,26 @@ Any model can be wrapped to this shape (e.g. a small Python service).
 
 ## Privacy
 Recordings stay in browser memory. They are sent out only when a engine is configured **and** the learner ticks consent for that recording. The backend holds audio in memory for the request only and never stores or logs it. If you choose a third-party hosted engine, review its data policy and update the privacy text in Settings.
+
+
+## AI passage checker for hifz and muraja'ah (added 2026-11-23)
+
+When `LETTER_ENGINE_URL` is set, the Muallim uses the AI checker (`engine/`, Quran Muaalem) for whole passages, at the level of letters and vowels, instead of the word-level engine. Everything downstream is unchanged: the result is saved as a `RecitationSubmission`, "memorised" needs a passed submission, and a revision session is rated from it (easy if passed, difficult with 3 or more corrections, otherwise moderate).
+
+- Engine: `POST /recite?surah=S&from=A&to=B` (body = audio, up to 40 verses and 180 s). It builds the reference from the Qur'an text bundled with the `quran-transcript` package (all 114 Surahs; the engine never calls the provider), asks the model what it heard, and compares with the library's own `explain_error`. It returns one record per word: `ok`, `wrong` (with the letter or vowel problem), `omitted`, or `not_reached` (stopped early).
+- Policy (`engine/recite.py`): a wrong, extra or missing letter or vowel blocks the pass. Tajweed-rule differences (madd length, ghunna...) are shown as **notes** and do **not** block (flip `tajweed_blocks` to change). If the audio matches the passage too little (similarity below 0.4) or is silent, the verdict is `unclear`, which neither passes nor fails.
+- Each verse is phonetised as if the reader stops at its end. A reader who joins verses may be told about verse-end sounds.
+- Backend: `letterEngine.checkPassage`, `utils/recitation/passageFeedback.js`, `GET /api/status` -> `recitation.mode` is `ai` or `words`.
+- **Not measured.** The model authors report 75.8% Tajweed F1 on their own benchmark. Nobody has checked it on learners' phone recordings. Because it gates progress, a wrong verdict can hold back a learner who recited correctly. Before relying on it: record 30 or more passages (some correct, some with deliberate mistakes), have a qualified teacher mark them, and count disagreements. If it blocks too often, lower the strictness in `recite.py`, or make the pass advisory.
+- Tests: `engine/test_recite.py` (real library, 114 Surahs, error injection), `engine/test_server.py` (fake model), `backend/test/passage-check.test.js`.
+
+## All Surahs and audio
+
+The Quran Foundation `prelive` account serves only Surahs 1 and 2 (the site itself restricts nothing). Two ways to get all 114:
+
+1. **Production access** from the Quran Foundation (apply in their dev console, needs approval), then `QF_ENV=production` and the production keys. No code change.
+2. **Second source, now:** set `QURAN_FALLBACK=alquran` in `backend/.env`. For anything the Quran Foundation cannot serve, the site uses the free AlQuran.cloud API (Islamic Network): its list of 114 Surahs, Tanzil-based Uthmani text (the Basmala it puts in front of verse 1 is removed, except for Al-Fatihah and At-Tawbah where it is handled correctly), per-verse recitation audio streamed from its CDN, and the Juz map. Its reciters appear in the Reciter list with ids from 100001; when a Surah has no audio from the chosen Quran Foundation reciter the viewer switches to one of them. Terms read on 2026-11-23: free, text may be used unaltered with credit, recitations may be streamed for personal and educational use and stay the reciters' copyright (a reciter can ask for removal in a commercial product; re-read the terms if Riwaq ever becomes commercial). Credit is shown under every passage.
+
+**Not verified:** the AlQuran.cloud API could not be reached from where this was built; the code follows its published OpenAPI spec and is tested only against a fake of it. Run `node --env-file=.env scripts/check-quran-coverage.js <reciterId> --audio` on your machine to see which Surahs and audio actually arrive. Nobody has listened to those recitations or compared that text with a printed mushaf. Have a teacher spot-check some Surahs.
+
+`node --env-file=.env scripts/check-quran-coverage.js [reciterId] [--audio]` lists, for all 114 Surahs, whether text and audio arrive (run with `--audio` and no id to list reciter ids).

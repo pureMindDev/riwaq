@@ -38,7 +38,9 @@ export default function MuallimRecitation({ submit, onResult, title = 'Recite to
       )}
       {unvalidated && (
         <p className="status-note" role="note" data-testid="engine-unvalidated">
-          <strong>Experimental.</strong> The recognition service has not yet been checked against qualified teachers. It listens to words and letters only (it does not judge Tajweed), and it can be wrong. Treat its corrections as a practice aid, not a ruling, and check anything doubtful with a teacher.
+          <strong>Experimental.</strong> {status.data?.recitation?.mode === 'ai'
+            ? 'The AI checker listens to every letter and vowel of your recitation and gives Tajweed notes, but it has not yet been checked against qualified teachers and it can be wrong. It decides your progress here, so if it marks you wrong when you are sure you were right, recite again and ask a teacher.'
+            : 'The recognition service has not yet been checked against qualified teachers. It listens to words and letters only (it does not judge Tajweed), and it can be wrong. Treat its corrections as a practice aid, not a ruling, and check anything doubtful with a teacher.'}
         </p>
       )}
       {available && state.status !== 'success' && (

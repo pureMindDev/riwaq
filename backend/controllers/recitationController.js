@@ -3,9 +3,9 @@ import { AppError } from '../utils/AppError.js'
 import { intParam } from '../utils/validate.js'
 
 // Practice mode on the Recitation Check page: the Muallim listens and answers, but nothing is saved.
-export const recitationController = ({ recitation, engine }) => ({
+export const recitationController = ({ recitation }) => ({
   analyze: asyncHandler(async (req, res) => {
-    if (!engine.available) throw new AppError('MUALLIM_UNAVAILABLE', 'The Muallim is not available yet: no recognition service is connected to this site.', 501)
+    if (!recitation.available()) throw new AppError('MUALLIM_UNAVAILABLE', 'The Muallim is not available yet: no recognition service is connected to this site.', 501)
     const surah = intParam(req.query.surah, 'surah', { max: 114 })
     const from = intParam(req.query.from, 'from', { max: 286 })
     const to = intParam(req.query.to, 'to', { max: 286 })

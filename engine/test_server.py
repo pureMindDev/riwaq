@@ -15,7 +15,8 @@ say = {"text": "ب"}
 class Fake:
     def __call__(self, waves, refs, sr):
         assert sr == 16000 and len(waves) == 1 and waves[0].dtype.name == "float32"
-        return [NS(phonemes=NS(text=say["text"], probs=[0.93]), sifat=[NS(hams_or_jahr=None, shidda_or_rakhawa=None, tafkheem_or_taqeeq=None, itbaq=None, safeer=None, qalqla=None, ghonna=None)])]
+        text = refs[0].phonemes if say["text"] == "@ref" and hasattr(refs[0], "mappings") else say["text"]
+        return [NS(phonemes=NS(text=text, probs=[0.93]), sifat=[NS(hams_or_jahr=None, shidda_or_rakhawa=None, tafkheem_or_taqeeq=None, itbaq=None, safeer=None, qalqla=None, ghonna=None)])]
 
 client_ctx = TestClient(server.create_app(lambda: Fake()))
 H = {"x-engine-key": "secret"}
@@ -33,4 +34,15 @@ with client_ctx as c:
     assert c.post("/letter?letter=ب", content=b"not audio at all" * 50, headers=H).status_code == 400
     assert c.post("/letter?letter=ب", content=wav(seconds=9), headers=H).status_code == 400  # too long
     assert c.post("/letter?letter=ب", content=b"x" * 2_000_001, headers=H).status_code == 400
+    # passage check
+    say["text"] = "@ref"
+    r = c.post("/recite?surah=1&from=1&to=7", content=wav(), headers=H); assert r.status_code == 200, r.text
+    j = r.json(); assert j["reliable"] and len(j["words"]) == 29 and all(w["status"] == "ok" for w in j["words"]), j
+    say["text"] = "ب"; j = c.post("/recite?surah=1&from=1&to=7", content=wav(), headers=H).json(); assert j["reliable"] is False, j
+    say["text"] = "@ref"
+    assert c.post("/recite?surah=1&from=1&to=7", content=wav()).status_code == 401
+    assert c.post("/recite?surah=1&from=5&to=3", content=wav(), headers=H).status_code == 400
+    assert c.post("/recite?surah=1&from=1&to=8", content=wav(), headers=H).status_code == 400
+    assert c.post("/recite?surah=200&from=1&to=1", content=wav(), headers=H).status_code == 422
+    assert c.post("/recite?surah=1&from=1&to=7", content=silence(), headers=H).json()["reason"] == "no_speech"
 print("ok: engine HTTP layer (fake model)")

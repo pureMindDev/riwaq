@@ -49,6 +49,12 @@ export function loadConfig(env = process.env) {
       // Surah/Juz metadata is kept in memory this long (the provider allows up to a week).
       metadataCacheSeconds: env.QF_CACHE_SECONDS === undefined ? 600 : Number(env.QF_CACHE_SECONDS),
     },
+    // Second Qur'an source for Surahs the Quran Foundation account does not serve (prelive serves only 1 and 2).
+    // Off unless QURAN_FALLBACK=alquran. See services/alquranCloud.js for its terms and what is unverified.
+    quranFallback: {
+      enabled: env.QURAN_FALLBACK === 'alquran',
+      apiUrl: (env.ALQURAN_API_URL || 'https://api.alquran.cloud/v1').replace(/\/$/, ''),
+    },
     muallim: {
       // DEVELOPMENT ONLY. When true, learners can mark things done without reciting to the Muallim.
       allowSelfDeclaration: env.ALLOW_SELF_DECLARATION === 'true',

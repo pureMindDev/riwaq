@@ -34,7 +34,8 @@ const server = app.listen(config.port, (err) => {
   console.log(`Riwaq API on http://localhost:${config.port}`)
   console.log(`Database: connected`)
   console.log(`Qur'an provider: ${services.quran.configured ? `configured (${services.quran.environment})` : 'NOT configured (set QF_CLIENT_ID / QF_CLIENT_SECRET)'}`)
-  console.log(`Recitation engine: ${services.engine.available ? 'configured' : 'not configured'}`)
+  console.log(`Second Qur'an source: ${services.quran.fallbackSource ? 'ON (alquran.cloud)' : 'OFF (set QURAN_FALLBACK=alquran in .env)'}`)
+  console.log(`Recitation engine: ${services.recitation.available() ? (services.letterEngine.available ? 'AI checker (phoneme level)' : 'word-level engine') : 'not configured'}`)
 })
 
 // Hosts stop a service with SIGTERM: finish in-flight requests, close the database, then exit.

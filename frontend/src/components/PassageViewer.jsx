@@ -35,10 +35,15 @@ export default function PassageViewer({ surah, from, to, startVerse, onVerseChan
   // Choose the reciter: the saved one if it exists, otherwise the first available (and say so).
   const reciterList = reciters.data
   const saved = reciterList?.find((r) => r.id === settings.reciterId)
-  const reciter = saved || reciterList?.[0]
-  const usingFallback = Boolean(reciterList && settings.reciterId && !saved && reciter)
+  // Reciters from the second source (ids from 100001) cover the Surahs the first source does not serve.
+  const otherSource = reciterList?.find((r) => r.id >= 100001)
+  const [switched, setSwitched] = useState(false)
+  useEffect(() => { setSwitched(false) }, [surah])
+  const reciter = (switched && otherSource) || saved || reciterList?.[0]
+  const usingFallback = Boolean(reciterList && settings.reciterId && !saved && reciter && !switched)
 
   const audio = useAsync(() => api.audio(surah, reciter.id), [surah, reciter?.id], { enabled: Boolean(reciter) })
+  useEffect(() => { if (audio.status === 'error' && reciter && reciter.id < 100001 && otherSource) setSwitched(true) }, [audio.status, reciter, otherSource])
   const urlByKey = useMemo(() => new Map((audio.data || []).map((a) => [a.verseKey, a.url])), [audio.data])
 
   const current = list?.[index]
@@ -68,7 +73,7 @@ export default function PassageViewer({ surah, from, to, startVerse, onVerseChan
         {reciterList && reciterList.length > 0 && (
           <div className="field">
             <label htmlFor="viewer-reciter">Reciter</label>
-            <select id="viewer-reciter" value={reciter?.id ?? ''} onChange={(e) => prefs.set({ reciterId: Number(e.target.value) })}>
+            <select id="viewer-reciter" value={reciter?.id ?? ''} onChange={(e) => { setSwitched(false); prefs.set({ reciterId: Number(e.target.value) }) }}>
               {reciterList.map((r) => <option key={r.id} value={r.id}>{r.name}{r.style ? ` (${r.style})` : ''}</option>)}
             </select>
           </div>
@@ -81,7 +86,7 @@ export default function PassageViewer({ surah, from, to, startVerse, onVerseChan
           )}
           {index > 0 && <button type="button" className="btn btn-secondary" onClick={() => select(0)}>Back to first verse</button>}
         </div>
-        <p className="muted small-print">Text: Uthmani script (Quran.Foundation). Recitation: {reciter ? reciter.name : 'loading…'}.</p>
+        <p className="muted small-print">Text: Uthmani script. Recitation: {reciter ? reciter.name : 'loading…'}.</p>
       </div>
       <ol className="verse-list" aria-label="Verses">
         {list.map((v, i) => (

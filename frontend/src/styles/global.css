@@ -305,6 +305,12 @@ fieldset.card > legend + * { clear: both; }
 .muallim-passed { border-color: var(--emerald-700); background: #f1f8f5; }
 .muallim-try_again { border-color: #a8332a; background: #fdf6f5; }
 .muallim-unclear { border-color: var(--gold-500); background: var(--gold-100); }
+.muallim-words { font-size: 1.7rem; line-height: 2.4; margin: 0.6rem 0; font-family: var(--font-arabic, inherit); }
+.mw { padding: 0 0.15em; border-radius: 6px; }
+.mw-ok { background: #dff3e8; }
+.mw-wrong { background: #f9dcd8; color: #8a2119; }
+.mw-omitted { background: #f9dcd8; color: #8a2119; text-decoration: underline wavy #a8332a; }
+.mw-not_reached { background: #ececec; color: #666; }
 .corrections { padding-left: 1.4rem; margin: 0.5rem 0; }
 .corrections li { margin-bottom: 0.6rem; font-size: 1.05rem; }
 .correction-word { display: inline-block; background: #fbe4e1; color: #7a1f17; border-radius: 999px; padding: 0 0.5rem; font-size: 0.8rem; font-weight: 700; margin-right: 0.25rem; }

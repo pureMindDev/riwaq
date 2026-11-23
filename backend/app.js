@@ -20,8 +20,8 @@ export function createApp({ config, services }) {
   app.get('/api/status', (_req, res) =>
     res.json({
       database: { connected: mongoose.connection.readyState === 1 },
-      quran: { configured: services.quran.configured, environment: services.quran.environment },
-      recitation: { available: services.engine.available, validated: config.recitation.validated },
+      quran: { configured: services.quran.configured, environment: services.quran.environment, fallback: services.quran.fallbackSource || null },
+      recitation: { available: services.recitation.available(), mode: services.letterEngine.available ? 'ai' : 'words', validated: config.recitation.validated },
       muallim: { strict: !config.muallim.allowSelfDeclaration },
       letterCheck: { available: services.letterEngine.available },
     }),

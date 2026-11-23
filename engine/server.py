@@ -14,11 +14,14 @@ import numpy as np
 from fastapi import FastAPI, HTTPException, Query, Request
 
 import letters as L
+import recite as R
 
 MAX_BYTES = 2_000_000
 MAX_SECONDS = 8.0
 MIN_SECONDS = 0.15
 MIN_RMS = 0.003  # below this the recording is silence
+PASSAGE_MAX_BYTES = 12_000_000
+PASSAGE_MAX_SECONDS = 180.0
 
 
 def decode_audio(data: bytes) -> np.ndarray:
@@ -85,6 +88,32 @@ def create_app(model_factory=load_model) -> FastAPI:
             if out["result"] in ("match", "fix") and len(res.phonemes.probs):
                 out["confidence"] = round(float(res.phonemes.probs[0]), 3)
         return {**out, "experimental": True, "engine": "quran-muaalem"}
+
+    @app.post("/recite")
+    async def recite(request: Request, surah: int = Query(..., ge=1, le=114), start: int = Query(..., alias="from", ge=1), end: int = Query(..., alias="to", ge=1)):
+        """A whole passage (verses from..to of a surah). Returns one record per word; see recite.py for the policy."""
+        if key and not hmac.compare_digest(request.headers.get("x-engine-key", ""), key):
+            raise HTTPException(401, "bad key")
+        try:
+            reference = R.build_reference(surah, start, end)
+        except R.BadPassage as exc:
+            raise HTTPException(400, str(exc))
+        data = await request.body()
+        if not data or len(data) > PASSAGE_MAX_BYTES:
+            raise HTTPException(400, "send one recording as the request body")
+        if state["model"] is None:
+            raise HTTPException(503, "model is still loading")
+        try:
+            wave = decode_audio(data)
+        except Exception:
+            raise HTTPException(400, "could not read the audio")
+        seconds = len(wave) / 16000
+        if seconds > PASSAGE_MAX_SECONDS:
+            raise HTTPException(400, f"recording is longer than {int(PASSAGE_MAX_SECONDS)} seconds")
+        quiet = seconds < MIN_SECONDS or float(np.sqrt(np.mean(np.square(wave)))) < MIN_RMS
+        predicted = "" if quiet else state["model"]([wave], [reference["ref"]], 16000)[0].phonemes.text
+        out = R.judge_passage(reference, predicted)
+        return {**out, "surah": surah, "from": start, "to": end, "seconds": round(seconds, 1), "experimental": True, "engine": "quran-muaalem"}
 
     return app
 

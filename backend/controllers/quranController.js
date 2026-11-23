@@ -12,7 +12,7 @@ export const quranController = ({ quran }) => ({
   }),
   audio: asyncHandler(async (req, res) => {
     const id = intParam(req.params.id, 'Surah', { max: 114 })
-    const reciter = intParam(req.query.reciter, 'reciter', { max: 100000 })
+    const reciter = intParam(req.query.reciter, 'reciter', { max: 1000000 })
     res.json({ reciterId: reciter, audio: await quran.getChapterAudio(id, reciter) })
   }),
   reciters: asyncHandler(async (_req, res) => res.json({ reciters: await quran.listReciters() })),

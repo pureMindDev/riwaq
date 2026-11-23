@@ -1,5 +1,6 @@
 // Builds every service once and wires them together (a tiny dependency-injection container).
 import { createQuranService } from './quranFoundation.js'
+import { createAlquranCloud, createCombinedQuran } from './alquranCloud.js'
 import { createRecitationEngine } from './recitationEngine.js'
 import { createLetterEngine } from './letterEngine.js'
 import { createPlanItems } from './planItems.js'
@@ -14,7 +15,8 @@ import { createPlanService } from './planService.js'
 import { createRecitationAssessmentService } from './recitationAssessmentService.js'
 
 export function createServices({ config, fetchImpl }) {
-  const quran = createQuranService({ config, fetchImpl })
+  const qf = createQuranService({ config, fetchImpl })
+  const quran = config.quranFallback.enabled ? createCombinedQuran({ primary: qf, fallback: createAlquranCloud({ apiUrl: config.quranFallback.apiUrl, fetchImpl }) }) : qf
   const engine = createRecitationEngine({ config, fetchImpl })
   const letterEngine = createLetterEngine({ config, fetchImpl })
   const planItems = createPlanItems()
@@ -28,6 +30,6 @@ export function createServices({ config, fetchImpl }) {
   const assessment = createAssessmentService()
   const auth = createAuthService({ config })
   const plan = createPlanService({ quran, passages, milestones, foundation, student })
-  const recitation = createRecitationAssessmentService({ quran, engine, passages })
+  const recitation = createRecitationAssessmentService({ quran, engine, passages, letterEngine })
   return { config, quran, engine, letterEngine, planItems, revision, milestones, passages, student, foundation, assessment, auth, plan, recitation }
 }

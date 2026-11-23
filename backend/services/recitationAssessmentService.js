@@ -2,14 +2,24 @@ import { AppError } from '../utils/AppError.js'
 import { splitWords } from '../utils/recitation/normalize.js'
 import { alignRecitation } from '../utils/recitation/align.js'
 import { muallimFeedback } from '../utils/recitation/muallim.js'
+import { passageFeedback } from '../utils/recitation/passageFeedback.js'
 import { LESSONS } from '../config/foundationCurriculum.js'
 import { Student } from '../models/Student.js'
 import { RecitationSubmission } from '../models/RecitationSubmission.js'
 
 // The Muallim: listens (through the configured recognition engine), compares with the exact text,
 // and answers with direct corrections. Only the OUTCOME is kept, never the audio.
-export function createRecitationAssessmentService({ quran, engine, passages }) {
+export function createRecitationAssessmentService({ quran, engine, passages, letterEngine }) {
+  // The AI checker (Quran Muaalem, phoneme level) is preferred when connected; otherwise the older word-level engine.
+  const aiPassage = () => Boolean(letterEngine?.available)
+  const available = () => aiPassage() || engine.available
+
   async function judge(surah, from, to, audio, contentType) {
+    if (aiPassage()) {
+      const check = await letterEngine.checkPassage(surah, from, to, audio, contentType)
+      const feedback = passageFeedback(check)
+      return { result: { mode: 'ai', words: check.words }, feedback, words: check.words.length }
+    }
     if (!engine.available) throw new AppError('MUALLIM_UNAVAILABLE', 'The Muallim is not available yet: no recognition service is connected to this site.', 501)
     const { verses } = await quran.getVerses(surah, from, to)
     const reference = verses.flatMap((v) => splitWords(v.textUthmani).map((text) => ({ text, verseKey: v.verseKey })))
@@ -20,7 +30,7 @@ export function createRecitationAssessmentService({ quran, engine, passages }) {
 
   const present = (sub, feedback, result) => ({
     id: String(sub._id), passed: sub.passed, verdict: feedback.verdict, headline: feedback.headline,
-    corrections: feedback.corrections, stats: feedback.stats, result,
+    corrections: feedback.corrections, advice: feedback.advice || [], stats: feedback.stats, result,
   })
 
   async function save(base, feedback, words) {
@@ -32,6 +42,7 @@ export function createRecitationAssessmentService({ quran, engine, passages }) {
 
   return {
     judge,
+    available,
 
     // Free practice (Recite page): nothing is saved.
     async practise(surah, from, to, audio, contentType) {

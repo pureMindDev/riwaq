@@ -46,6 +46,7 @@ export default function Recite() {
   const serverAvailable = status.data?.recitation?.available === true && signedIn
   const serverConfigured = status.data?.recitation?.available === true
   const serverValidated = status.data?.recitation?.validated === true
+  const aiMuallim = status.data?.recitation?.mode === 'ai' && serverAvailable // the AI Muallim replaces the browser guesser
   const chapter = ch.byId?.(Number(range.surah))
   const rangeProblem = validateRange({ surah: Number(range.surah), from: Number(range.from), to: Number(range.to) }, chapter?.versesCount)
   const rangeOk = Boolean(range.surah) && !rangeProblem && Boolean(chapter)
@@ -58,11 +59,13 @@ export default function Recite() {
 
   // Pick a sensible default engine once we know what is available.
   useEffect(() => {
-    if (engine !== null || status.status === 'loading') return
+    if (status.status === 'loading') return
+    if (aiMuallim) { if (engine !== 'server') setEngine('server'); return }
+    if (engine !== null) return
     if (serverAvailable) setEngine('server')
     else if (speech.supported) setEngine('browser')
     else setEngine('none')
-  }, [engine, status.status, serverAvailable, speech.supported])
+  }, [engine, status.status, serverAvailable, aiMuallim, speech.supported])
 
   // Live follow-along: which reference words have been heard so far (browser engine only).
   const live = useMemo(
@@ -164,7 +167,7 @@ export default function Recite() {
   return (
     <>
       <p><Link to="/listen">&larr; Listen &amp; Practise</Link></p>
-      <PageHeader title="Recitation Check" intro="Experimental. Recite a passage and compare what was recognised with the text. It cannot judge Tajweed." />
+      <PageHeader title="Recitation Check" intro={aiMuallim ? 'Recite a passage and the AI Muallim listens, marks every word, and corrects you like a teacher. Experimental: it can be wrong, so check doubtful corrections with a teacher.' : 'Experimental. Recite a passage and compare what was recognised with the text. It cannot judge Tajweed.'} />
 
       <section className="card stack" aria-labelledby="pick">
         <h2 id="pick">1. Choose the passage</h2>
@@ -182,7 +185,8 @@ export default function Recite() {
       <section className="card stack" aria-labelledby="how">
         <h2 id="how">2. How should it be checked?</h2>
         {status.status === 'error' && <AsyncMessage status="error" error={status.error} onRetry={status.retry} />}
-        <fieldset className="field">
+        {aiMuallim && <p><strong>The AI Muallim will listen to your recitation</strong> and correct the letters, vowels and skipped words, and add Tajweed notes. Press Start recording, recite, press Stop, then ask the Muallim to check.</p>}
+        {!aiMuallim && <fieldset className="field">
           <legend className="sr-only">Recognition method</legend>
           <label className="radio">
             <input type="radio" name="engine" disabled={!serverAvailable} checked={engine === 'server'} onChange={() => { setEngine('server'); clear() }} />
@@ -196,7 +200,7 @@ export default function Recite() {
             <input type="radio" name="engine" checked={engine === 'none'} onChange={() => { setEngine('none'); clear() }} />
             <span><strong>Just record and listen back</strong><br /><span className="muted">Nothing is analysed.</span></span>
           </label>
-        </fieldset>
+        </fieldset>}
         {engine === 'browser' && (
           <label className="check">
             <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
@@ -247,12 +251,12 @@ export default function Recite() {
             <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} />
             I understand my recording will be sent to the recognition service to be analysed. It is not stored by this app.
           </label>
-          <div><button type="button" className="btn btn-primary" disabled={!consent || analysis.status === 'loading' || !rangeOk} onClick={analyse}>Analyse my recitation</button></div>
+          <div><button type="button" className="btn btn-primary" disabled={!consent || analysis.status === 'loading' || !rangeOk} onClick={analyse}>{aiMuallim ? 'Ask the Muallim to check' : 'Analyse my recitation'}</button></div>
           {analysis.status === 'loading' && <p role="status">Analysing…</p>}
         </section>
       )}
       {analysis.status === 'error' && <p className="form-error" role="alert">{friendlyError(analysis.error)}</p>}
-      {analysis.engine === 'server' && analysis.feedback && <section className="card"><h2>The Muallim (practice: nothing is saved)</h2><MuallimFeedback feedback={analysis.feedback} /></section>}
+      {analysis.engine === 'server' && analysis.feedback && <section className="card"><h2>The Muallim (practice: nothing is saved)</h2><MuallimFeedback feedback={analysis.feedback} words={analysis.result?.mode === 'ai' ? analysis.result.words : undefined} /></section>}
       {analysis.result && analysis.engine === 'browser' && (
         <AnalysisResult
           result={analysis.result}

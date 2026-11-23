@@ -63,3 +63,8 @@ become advice only instead of keeping the card red).
 ## Deploying for real users
 Run it on a server you control (a small GPU machine is best), behind HTTPS or on a private network reachable only by
 the Riwaq backend; keep `ENGINE_API_KEY` secret. Do not expose it to browsers directly.
+
+
+## Passage check (hifz and muraja'ah)
+
+`POST /recite?surah=1&from=1&to=7` with the recording as the body (and the `X-Engine-Key` header) returns one record per word (ok, wrong, omitted, not_reached) plus Tajweed notes. Same engine, same `LETTER_ENGINE_URL`: the backend uses it automatically for the Muallim. Tests without the model: `python test_recite.py` and `RIWAQ_ENGINE_NO_AUTOSTART=1 ENGINE_API_KEY=secret python test_server.py`. See `docs/RECITATION.md` for the policy and the accuracy warning.

@@ -104,7 +104,7 @@ Passwords: scrypt (N=16384, r=8, p=1) with a random 16-byte salt, 8-128 characte
 
 ## Checks
 ```
-cd backend  && npm run test:db     # 111 tests; starts a throwaway mongod (needs mongod on PATH, or set MONGOD_BIN). Or: TEST_MONGODB_URI=... npm test
+cd backend  && npm run test:db     # 124 tests; starts a throwaway mongod (needs mongod on PATH, or set MONGOD_BIN). Or: TEST_MONGODB_URI=... npm test
 cd frontend && npm test && npm run lint && npm run build
 export MONGOD_BIN=$(which mongod)
 ./e2e/run-stack.sh strict && (cd e2e && python3 muallim.py); ./e2e/stop-stack.sh                      # the Muallim rules (scriptable TEST engine)
