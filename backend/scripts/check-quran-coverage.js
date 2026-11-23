@@ -6,6 +6,7 @@
 // and prints a table of what is missing. Run it with QF_ENV=prelive and again with QF_ENV=production to see the difference.
 // Nothing is stored. The site itself never limits Surahs: it shows whatever the provider returns, and says so when a
 // Surah or its audio is unavailable. (Qur'an text and audio are fetched live; this project does not store them.)
+import { pathToFileURL } from 'node:url'
 import { loadConfig } from '../config/index.js'
 import { createQuranService } from '../services/quranFoundation.js'
 
@@ -43,7 +44,7 @@ export async function runCoverage({ quran, reciterId = null, log = console.log, 
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const args = process.argv.slice(2)
   const reciterId = Number(args.find((a) => /^\d+$/.test(a))) || null
   const config = loadConfig()

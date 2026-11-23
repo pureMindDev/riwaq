@@ -6,6 +6,8 @@
 A free digital madrasa: learn to read Arabic, memorise a little each day, keep what you have memorised (Muraja'ah), and listen to recitation.
 For individual learners. No payments, ads or monetisation.
 
+**Hosting:** see `docs/HOSTING.md` (database, backend, frontend, AI engine, and how to update).
+
 ## The idea: the website is the Muallim
 There is no human teacher role. The software plays the Muallim: it listens to the student, points out exactly what is wrong, and **does not let anyone move on until they have actually got it right**. Nothing is completed by clicking "I have learned it".
 
